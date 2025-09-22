@@ -9,12 +9,14 @@ namespace Collectables
             _container = container;
         }
 
-        public void Collect(ICollectableObject collectable)
+        public bool TryCollect(ICollectableObject collectable)
         {
             if (collectable is PistolAmmoCollectable ammo)
             {
-                Collect(ammo);
+                return TryCollect(ammo);
             }
+
+            return false;
         }
 
         public int GetCollectableType()
@@ -22,9 +24,10 @@ namespace Collectables
             return CollectablesTypes.PistolAmmo;
         }
 
-        private void Collect(PistolAmmoCollectable pistolAmmo)
+        private bool TryCollect(PistolAmmoCollectable pistolAmmo)
         {
             _container.PistolAmmo += pistolAmmo.GetAmount();
+            return true;
         }
     }
 }

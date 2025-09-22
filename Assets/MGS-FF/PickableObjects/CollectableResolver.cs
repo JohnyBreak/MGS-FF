@@ -13,21 +13,21 @@ namespace Collectables
             _collectorsMap = collectors.ToDictionary(x => x.GetCollectableType());
         }
         
-        public void Collect(ICollectableObject collectable)
+        public bool TryCollect(ICollectableObject collectable)
         {
             if (collectable == null)
             {
                 Debug.LogError($"Collectable is null");
-                return;
+                return false;
             }
 
             if (_collectorsMap.TryGetValue(collectable.GetCollectableType(), out var collector))
             {
-                collector.Collect(collectable);
-                return;
+                return collector.TryCollect(collectable);
             }
             
             Debug.LogError($"No collector for '{collectable.GetCollectableType()}' CollectableType");
+            return false;
         }
     }
 }

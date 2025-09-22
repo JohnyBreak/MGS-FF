@@ -124,3 +124,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee6b1b2aa1999a40852f52af1f21756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CollectableObjectView
+  _collider: {fileID: 1413887938137587334}
