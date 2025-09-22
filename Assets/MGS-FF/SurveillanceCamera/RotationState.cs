@@ -2,29 +2,40 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-public class RotationState : MonoBehaviour
+public class RotationState : IDisposable
 {
-    [SerializeField] private float _time = 4;
-    private Vector3 _localRotation;
+    private Transform _target;
+    private float _time;
     private Vector3 _left;
     private Vector3 _right;
     private Sequence _sequence;
-
-    private void Awake()
+    private float _halfAngle;
+        
+    public RotationState(Transform target, float time, float halfAngle)
     {
-        _localRotation = transform.localRotation.eulerAngles;
-        _left = new Vector3(_localRotation.x, -65, _localRotation.z);
-        _right = new Vector3(_localRotation.x, 65, _localRotation.z);
-        
-        
+        _target = target;
+        _time = time;
+        _halfAngle = halfAngle;
     }
 
-    private void OnEnable()
+    public void Init()
     {
-        var value = Calculate(NormalizeAngle(transform.localEulerAngles.y));
-        transform.DOLocalRotate(_left, _time * value).SetEase(Ease.Linear).OnComplete(StartLoop).SetId(0);
+        _left = new Vector3(_target.localEulerAngles.x, -_halfAngle, _target.localEulerAngles.z);
+        _right = new Vector3(_target.localEulerAngles.x, _halfAngle, _target.localEulerAngles.z);
     }
-    
+
+    public void Enable()
+    {
+        var value = Calculate(NormalizeAngle(_target.localEulerAngles.y));
+        _target.DOLocalRotate(_left, _time * value).SetEase(Ease.Linear).OnComplete(StartLoop).SetId(0);
+    }
+
+    public void Disable()
+    {
+        DOTween.Kill(0);
+        DOTween.Kill(1);
+    }
+
     private float NormalizeAngle(float angle)
     {
         while (angle > 180f) angle -= 360f;
@@ -32,18 +43,10 @@ public class RotationState : MonoBehaviour
         return angle;
     }
     
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.LogError(Calculate(NormalizeAngle(transform.localEulerAngles.y)));
-        }
-    }
-
     private float Calculate(float angle)
     {
-        float all = 65 * 2;
-        angle += 65;
+        float all = _halfAngle * 2;
+        angle += _halfAngle;
         return angle / all;
     }
 
@@ -52,16 +55,15 @@ public class RotationState : MonoBehaviour
         var sequence = DOTween.Sequence();
         sequence.SetId(1);
         sequence.AppendInterval(2);
-        sequence.Append(transform.DOLocalRotate(_right, _time)).SetEase(Ease.Linear);
+        sequence.Append(_target.DOLocalRotate(_right, _time)).SetEase(Ease.Linear);
         sequence.AppendInterval(2);
         
-        sequence.Append(transform.DOLocalRotate(_left, _time)).SetEase(Ease.Linear);
+        sequence.Append(_target.DOLocalRotate(_left, _time)).SetEase(Ease.Linear);
         sequence.SetLoops(-1);
     }
 
-    private void OnDisable()
+    public void Dispose()
     {
-        DOTween.Kill(0);
-        DOTween.Kill(1);
+        Disable();
     }
 }

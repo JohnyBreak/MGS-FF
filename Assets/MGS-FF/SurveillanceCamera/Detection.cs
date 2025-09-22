@@ -1,22 +1,34 @@
-using System.Collections;
+using System;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
-public class Detection : MonoBehaviour
+public class Detection : IDisposable
 {
-    [SerializeField] private LookAtState _lookState;
-    [SerializeField] private RotationState _rotationState;
-    [SerializeField] private LayerMask _layerMask;
-    
-    private Transform _target;
+    private CompositeDisposable _disposable = new();
+    private LayerMask _layerMask;
+    private Collider _collider;
     private Coroutine _resetRoutine;
-
-    public void Reset()
-    {
-        _target = null;
-        _lookState.Reset();
-        _resetRoutine = StartCoroutine(ResetRoutine());
-    }
+    public IReactiveProperty<Transform> Target { get; private set; } = new ReactiveProperty<Transform>(null);
     
+    public Detection(LayerMask layerMask, Collider collider)
+    {
+        _layerMask = layerMask;
+        _collider = collider;
+    }
+
+    public void Init()
+    {
+        _collider
+            .OnTriggerEnterAsObservable()
+            .Subscribe(OnTriggerEnter)
+            .AddTo(_disposable);
+        _collider
+            .OnTriggerExitAsObservable()
+            .Subscribe(OnTriggerExit)
+            .AddTo(_disposable);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if ((_layerMask.value & (1 << other.transform.gameObject.layer)) <= 0)
@@ -24,38 +36,26 @@ public class Detection : MonoBehaviour
             return;
         }
 
-        _target = other.transform;
-        
-        StopRoutine();
-        _lookState.enabled = true;
-        _lookState.SetTarget(_target);
-        _rotationState.enabled = false;
+        Target.Value = other.transform;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (_target != other.transform)
+        if ((_layerMask.value & (1 << other.transform.gameObject.layer)) <= 0)
         {
             return;
         }
-
-        Reset();
-    }
-
-    private IEnumerator ResetRoutine()
-    {
-        yield return new WaitForSeconds(2);
-        _lookState.enabled = false;
-        _rotationState.enabled = true;
-    }
-
-    private void StopRoutine()
-    {
-        if (_resetRoutine != null)
+        
+        if (Target.Value != other.transform)
         {
-            StopCoroutine(_resetRoutine);
+            return;
         }
+        
+        Target.Value = null;
+    }
 
-        _resetRoutine = null;
+    public void Dispose()
+    {
+        _disposable?.Dispose();
     }
 }

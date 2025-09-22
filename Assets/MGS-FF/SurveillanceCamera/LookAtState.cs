@@ -1,37 +1,48 @@
+using System;
+using UniRx;
 using UnityEngine;
 
-public class LookAtState : MonoBehaviour
+public class LookAtState : IDisposable
 {
-    [SerializeField] private Detection _detection;
-    [SerializeField] private float _speed = 3f;
-    
-    [SerializeField] private float _maxPitch = 55f;
-    [SerializeField] private float _minPitch = 0f;
-    [SerializeField] private float _minYaw = -65f;
-    [SerializeField] private float _maxYaw = 65f;
+    private CompositeDisposable _disposable = new();
+    private Transform _rotator;
+    private float _speed = 3f;
+    private float _maxPitch = 55f;
+    private float _minPitch = 0f;
+    private float _minYaw = -65f;
+    private float _maxYaw = 65f;
     
     private Transform _target;
-    private bool _canLook;
 
-    public void SetTarget(Transform target)
+    public LookAtState(Transform rotator, float halfAngle, float speed)
+    {
+        _rotator = rotator;
+        _speed = speed;
+        _minYaw = -halfAngle;
+        _maxYaw = halfAngle;
+    }
+
+    public void Enable(Transform target)
     {
         _target = target;
-        _canLook = true;
+        Observable.EveryUpdate()
+            .Subscribe(_ => Update())
+            .AddTo(_disposable);
     }
     
-    public void Reset()
+    public void Disable()
     {
+        _disposable.Clear();
         _target = null;
-        _canLook = false;
     }
     
-    private void Update()
+    private void Update()//как-то подвязать через юни рх ?
     {
         if (!_target) return;
 
-        Vector3 localTargetDir = transform.parent ? 
-            transform.parent.InverseTransformDirection(_target.position - transform.position) : 
-            _target.position - transform.position;
+        Vector3 localTargetDir = _rotator.parent ? 
+            _rotator.parent.InverseTransformDirection(_target.position - _rotator.position) : 
+            _target.position - _rotator.position;
 
         if (localTargetDir == Vector3.zero)
             return;
@@ -52,7 +63,7 @@ public class LookAtState : MonoBehaviour
         );
 
         Quaternion clampedRotation = Quaternion.Euler(clampedEuler);
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, clampedRotation, _speed * Time.deltaTime);
+        _rotator.localRotation = Quaternion.Slerp(_rotator.localRotation, clampedRotation, _speed * Time.deltaTime);
     }
 
     private Vector3 NormalizeAngles(Vector3 angles)
@@ -69,5 +80,10 @@ public class LookAtState : MonoBehaviour
         while (angle > 180f) angle -= 360f;
         while (angle < -180f) angle += 360f;
         return angle;
+    }
+
+    public void Dispose()
+    {
+        _disposable?.Dispose();
     }
 }
