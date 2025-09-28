@@ -2,88 +2,91 @@ using System;
 using UniRx;
 using UnityEngine;
 
-public class LookAtState : IDisposable
+namespace SurveillanceCameraSystem
 {
-    private CompositeDisposable _disposable = new();
-    private Transform _rotator;
-    private float _speed = 3f;
-    private float _maxPitch = 55f;
-    private float _minPitch = 0f;
-    private float _minYaw = -65f;
-    private float _maxYaw = 65f;
-    
-    private Transform _target;
-
-    public LookAtState(Transform rotator, float halfAngle, float speed)
+    public class LookAtState : IDisposable
     {
-        _rotator = rotator;
-        _speed = speed;
-        _minYaw = -halfAngle;
-        _maxYaw = halfAngle;
-    }
+        private CompositeDisposable _disposable = new();
+        private Transform _rotator;
+        private float _speed = 3f;
+        private float _maxPitch = 55f;
+        private float _minPitch = 0f;
+        private float _minYaw = -65f;
+        private float _maxYaw = 65f;
 
-    public void Enable(Transform target)
-    {
-        _target = target;
-        Observable.EveryUpdate()
-            .Subscribe(_ => Update())
-            .AddTo(_disposable);
-    }
-    
-    public void Disable()
-    {
-        _disposable.Clear();
-        _target = null;
-    }
-    
-    private void Update()//как-то подвязать через юни рх ?
-    {
-        if (!_target) return;
+        private Transform _target;
 
-        Vector3 localTargetDir = _rotator.parent ? 
-            _rotator.parent.InverseTransformDirection(_target.position - _rotator.position) : 
-            _target.position - _rotator.position;
+        public LookAtState(Transform rotator, float halfAngle, float speed)
+        {
+            _rotator = rotator;
+            _speed = speed;
+            _minYaw = -halfAngle;
+            _maxYaw = halfAngle;
+        }
 
-        if (localTargetDir == Vector3.zero)
-            return;
+        public void Enable(Transform target)
+        {
+            _target = target;
+            Observable.EveryUpdate()
+                .Subscribe(_ => Update())
+                .AddTo(_disposable);
+        }
 
-        Quaternion targetRotation = Quaternion.LookRotation(localTargetDir);
+        public void Disable()
+        {
+            _disposable.Clear();
+            _target = null;
+        }
 
-        Vector3 targetEuler = targetRotation.eulerAngles;
+        private void Update() //как-то подвязать через юни рх ?
+        {
+            if (!_target) return;
 
-        targetEuler = NormalizeAngles(targetEuler);
+            Vector3 localTargetDir = _rotator.parent
+                ? _rotator.parent.InverseTransformDirection(_target.position - _rotator.position)
+                : _target.position - _rotator.position;
 
-        float deltaYaw = Mathf.Clamp(targetEuler.y, _minYaw, _maxYaw);
-        float deltaPitch = Mathf.Clamp(targetEuler.x, _minPitch, _maxPitch);
+            if (localTargetDir == Vector3.zero)
+                return;
 
-        Vector3 clampedEuler = new Vector3(
-            deltaPitch,
-            deltaYaw,
-            0f
-        );
+            Quaternion targetRotation = Quaternion.LookRotation(localTargetDir);
 
-        Quaternion clampedRotation = Quaternion.Euler(clampedEuler);
-        _rotator.localRotation = Quaternion.Slerp(_rotator.localRotation, clampedRotation, _speed * Time.deltaTime);
-    }
+            Vector3 targetEuler = targetRotation.eulerAngles;
 
-    private Vector3 NormalizeAngles(Vector3 angles)
-    {
-        return new Vector3(
-            NormalizeAngle(angles.x),
-            NormalizeAngle(angles.y),
-            NormalizeAngle(angles.z)
-        );
-    }
+            targetEuler = NormalizeAngles(targetEuler);
 
-    private float NormalizeAngle(float angle)
-    {
-        while (angle > 180f) angle -= 360f;
-        while (angle < -180f) angle += 360f;
-        return angle;
-    }
+            float deltaYaw = Mathf.Clamp(targetEuler.y, _minYaw, _maxYaw);
+            float deltaPitch = Mathf.Clamp(targetEuler.x, _minPitch, _maxPitch);
 
-    public void Dispose()
-    {
-        _disposable?.Dispose();
+            Vector3 clampedEuler = new Vector3(
+                deltaPitch,
+                deltaYaw,
+                0f
+            );
+
+            Quaternion clampedRotation = Quaternion.Euler(clampedEuler);
+            _rotator.localRotation = Quaternion.Slerp(_rotator.localRotation, clampedRotation, _speed * Time.deltaTime);
+        }
+
+        private Vector3 NormalizeAngles(Vector3 angles)
+        {
+            return new Vector3(
+                NormalizeAngle(angles.x),
+                NormalizeAngle(angles.y),
+                NormalizeAngle(angles.z)
+            );
+        }
+
+        private float NormalizeAngle(float angle)
+        {
+            while (angle > 180f) angle -= 360f;
+            while (angle < -180f) angle += 360f;
+            return angle;
+        }
+
+        public void Dispose()
+        {
+            _disposable?.Dispose();
+        }
     }
 }
