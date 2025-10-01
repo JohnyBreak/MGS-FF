@@ -8,7 +8,7 @@ namespace SurveillanceCameraSystem
     public class SurveillanceCamera : MonoBehaviour
     {
         public event Action TargetSpottedEvent;
-        
+        public event Action TargetLostEvent;
         [SerializeField] private LayerMask _layerMask;
         [SerializeField] private Collider _collider;
         [SerializeField] private Transform _rotator;
@@ -25,10 +25,12 @@ namespace SurveillanceCameraSystem
             _lookAtState = new LookAtState(_rotator, 65, 3);
             _detection = new Detection(_layerMask, _collider);
             _rotationState = new RotationState(_rotator, 4f, 65);
+            
             _detection.Target
                 .Skip(1)
                 .Subscribe(OnTarget)
                 .AddTo(_disposable);
+            
             _brokenState = new(transform, _rotator);
             _brokenState.BreakEvent += OnBreak;
         }
@@ -50,7 +52,8 @@ namespace SurveillanceCameraSystem
                 {
                     StopCoroutine(_resetRoutine);
                 }
-
+                
+                TargetLostEvent?.Invoke();
                 _resetRoutine = StartCoroutine(ResetRoutine());
                 return;
             }
@@ -98,7 +101,10 @@ namespace SurveillanceCameraSystem
 
         private void OnDestroy()
         {
-            _brokenState.BreakEvent -= OnBreak;
+            if (_brokenState != null)
+            {
+                _brokenState.BreakEvent -= OnBreak;
+            }
             _detection?.Dispose();
             _rotationState?.Dispose();
             _brokenState?.Dispose();
