@@ -1,5 +1,7 @@
 using System;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 public class RotationState : IDisposable
@@ -10,7 +12,8 @@ public class RotationState : IDisposable
     private Vector3 _right;
     private Sequence _sequence;
     private float _halfAngle;
-        
+    private TweenerCore<Quaternion, Vector3, QuaternionOptions> _rot;
+    
     public RotationState(Transform rotator, float time, float halfAngle)
     {
         _rotator = rotator;
@@ -27,13 +30,16 @@ public class RotationState : IDisposable
     public void Enable()
     {
         var value = Calculate(NormalizeAngle(_rotator.localEulerAngles.y));
-        _rotator.DOLocalRotate(_left, _time * value).SetEase(Ease.Linear).OnComplete(StartLoop).SetId(0);
+        _rot = _rotator
+            .DOLocalRotate(_left, _time * value)
+            .SetEase(Ease.Linear)
+            .OnComplete(StartLoop);
     }
 
     public void Disable()
     {
-        DOTween.Kill(0);
-        DOTween.Kill(1);
+        _rot.Kill();
+        _sequence.Kill();
     }
 
     private float NormalizeAngle(float angle)
@@ -52,14 +58,13 @@ public class RotationState : IDisposable
 
     private void StartLoop()
     {
-        var sequence = DOTween.Sequence();
-        sequence.SetId(1);
-        sequence.AppendInterval(2);
-        sequence.Append(_rotator.DOLocalRotate(_right, _time)).SetEase(Ease.Linear);
-        sequence.AppendInterval(2);
+        _sequence = DOTween.Sequence();
+        _sequence.AppendInterval(2);
+        _sequence.Append(_rotator.DOLocalRotate(_right, _time)).SetEase(Ease.Linear);
+        _sequence.AppendInterval(2);
         
-        sequence.Append(_rotator.DOLocalRotate(_left, _time)).SetEase(Ease.Linear);
-        sequence.SetLoops(-1);
+        _sequence.Append(_rotator.DOLocalRotate(_left, _time)).SetEase(Ease.Linear);
+        _sequence.SetLoops(-1);
     }
 
     public void Dispose()

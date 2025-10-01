@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using UniRx;
 using UnityEngine;
 
 namespace SurveillanceCameraSystem
@@ -13,7 +12,6 @@ namespace SurveillanceCameraSystem
         [SerializeField] private Collider _collider;
         [SerializeField] private Transform _rotator;
 
-        private CompositeDisposable _disposable = new();
         private Detection _detection;
         private RotationState _rotationState;
         private LookAtState _lookAtState;
@@ -23,16 +21,9 @@ namespace SurveillanceCameraSystem
         private void Awake()
         {
             _lookAtState = new LookAtState(_rotator, 65, 3);
-            _detection = new Detection(_layerMask, _collider);
+            _detection = new Detection(_layerMask, _collider, OnTarget);
             _rotationState = new RotationState(_rotator, 4f, 65);
-            
-            _detection.Target
-                .Skip(1)
-                .Subscribe(OnTarget)
-                .AddTo(_disposable);
-            
-            _brokenState = new(transform, _rotator);
-            _brokenState.BreakEvent += OnBreak;
+            _brokenState = new(transform, _rotator, OnBreak);
         }
 
         private IEnumerator Start()
@@ -46,18 +37,19 @@ namespace SurveillanceCameraSystem
 
         private void OnTarget(Transform target)
         {
+            if (_resetRoutine != null)
+            {
+                StopCoroutine(_resetRoutine);
+            }
+            
             if (target == null)
             {
-                if (_resetRoutine != null)
-                {
-                    StopCoroutine(_resetRoutine);
-                }
-                
+                _lookAtState.Disable();
                 TargetLostEvent?.Invoke();
                 _resetRoutine = StartCoroutine(ResetRoutine());
                 return;
             }
-
+            
             _rotationState.Disable();
             _lookAtState.Enable(target);
             TargetSpottedEvent?.Invoke();
@@ -66,8 +58,7 @@ namespace SurveillanceCameraSystem
         private IEnumerator ResetRoutine()
         {
             yield return new WaitForSeconds(3);
-            _rotationState.Enable();
-            _lookAtState.Disable();
+            ResetState();
         }
 
         private void OnBreak()
@@ -78,20 +69,7 @@ namespace SurveillanceCameraSystem
             _brokenState.Enable();
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                OnBreak();
-            }
-            
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                Reset();
-            }
-        }
-
-        private void Reset()
+        private void ResetState()
         {
             _lookAtState.Disable();
             _detection.Enable();
@@ -101,10 +79,6 @@ namespace SurveillanceCameraSystem
 
         private void OnDestroy()
         {
-            if (_brokenState != null)
-            {
-                _brokenState.BreakEvent -= OnBreak;
-            }
             _detection?.Dispose();
             _rotationState?.Dispose();
             _brokenState?.Dispose();

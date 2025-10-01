@@ -38,10 +38,8 @@ namespace SurveillanceCameraSystem
             _target = null;
         }
 
-        private void Update() //как-то подвязать через юни рх ?
+        private void Update()
         {
-            if (!_target) return;
-
             Vector3 localTargetDir = _rotator.parent
                 ? _rotator.parent.InverseTransformDirection(_target.position - _rotator.position)
                 : _target.position - _rotator.position;

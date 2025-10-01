@@ -7,33 +7,31 @@ namespace SurveillanceCameraSystem
 {
     public class BrokenState : IDisposable
     {
-        public event Action BreakEvent;
         private readonly Transform _parent;
         private readonly Transform _head;
+        private readonly Action _onBroke;
         private IDamageable[] _damageables;
         
-        public BrokenState(Transform parent, Transform head)
+        public BrokenState(Transform parent, Transform head, Action onBroke)
         {
             _parent = parent;
             _head = head;
+            _onBroke = onBroke;
         }
 
         public void Init()
         {
-            // get hit boxes
-            
             _damageables = _parent.GetComponentsInChildren<IDamageable>();
             foreach (var damageable in _damageables)
             {
                 damageable.DamagedEvent += OnDamage;
             }
-            // invoke break event
         }
 
         private void OnDamage(DamageInfo damageInfo)
         {
             //TODO: check if damage is valid
-            BreakEvent?.Invoke();
+            _onBroke?.Invoke();
         }
 
         public void Enable()
