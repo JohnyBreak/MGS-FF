@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using DamageSystem;
+using DG.Tweening;
 using UnityEngine;
 
 namespace SurveillanceCameraSystem
@@ -15,7 +17,7 @@ namespace SurveillanceCameraSystem
         private Detection _detection;
         private RotationState _rotationState;
         private LookAtState _lookAtState;
-        private BrokenState _brokenState;
+        private DamageReceiver _damageReceiver;
         private Coroutine _resetRoutine;
 
         private void Awake()
@@ -23,7 +25,7 @@ namespace SurveillanceCameraSystem
             _lookAtState = new LookAtState(_rotator, 65, 3);
             _detection = new Detection(_layerMask, _collider, OnTarget);
             _rotationState = new RotationState(_rotator, 4f, 65);
-            _brokenState = new(transform, _rotator, OnBreak);
+            _damageReceiver = new(transform, OnDamage);
         }
 
         private IEnumerator Start()
@@ -31,7 +33,7 @@ namespace SurveillanceCameraSystem
             yield return null;
             _detection.Init();
             _rotationState.Init();
-            _brokenState.Init();
+            _damageReceiver.Init();
             _rotationState.Enable();
         }
 
@@ -61,19 +63,44 @@ namespace SurveillanceCameraSystem
             ResetState();
         }
 
-        private void OnBreak()
+        private void OnDamage(IDamage damage)
+        {
+            if (damage is ElectricStunDamage electricStunDamage)
+            {
+                OnStun(electricStunDamage.GetDuration());
+                return;
+            }
+
+            OnBreak();
+        }
+
+        private void OnStun(float duration)
         {
             _rotationState.Disable();
             _lookAtState.Disable();
             _detection.Disable();
-            _brokenState.Enable();
+            _damageReceiver.Disable();
+
+            _rotator.DOShakeRotation(duration, 45).OnComplete(_rotationState.Enable);
+        }
+ 
+        private void OnBreak()
+        {
+            var angles = _rotator.localEulerAngles;
+            angles.x = 80;
+            _rotator.DOLocalRotate(angles, .2f).SetEase(Ease.Linear);
+            
+            _rotationState.Disable();
+            _lookAtState.Disable();
+            _detection.Disable();
+            _damageReceiver.Enable();
         }
 
         private void ResetState()
         {
             _lookAtState.Disable();
             _detection.Enable();
-            _brokenState.Disable();
+            _damageReceiver.Disable();
             _rotationState.Enable();
         }
 
@@ -81,7 +108,7 @@ namespace SurveillanceCameraSystem
         {
             _detection?.Dispose();
             _rotationState?.Dispose();
-            _brokenState?.Dispose();
+            _damageReceiver?.Dispose();
         }
     }
 }

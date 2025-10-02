@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 6216048485981756714}
   - component: {fileID: 2044853945052997232}
   - component: {fileID: 8989964723059352247}
-  m_Layer: 0
+  - component: {fileID: 3676558749608040512}
+  m_Layer: 8
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,6 +112,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3676558749608040512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257958131058079851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a27ff6d9ed926dd45baeb8ece842d34f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageSystem.DamageableCollider
 --- !u!1 &305106546267421965
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,7 +134,8 @@ GameObject:
   m_Component:
   - component: {fileID: 727661025497817265}
   - component: {fileID: 8669620477794730575}
-  m_Layer: 0
+  - component: {fileID: 2741034989539890016}
+  m_Layer: 8
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,6 +176,27 @@ MonoBehaviour:
     m_Bits: 64
   _collider: {fileID: 8376738079920952391}
   _rotator: {fileID: 6735673723807663595}
+--- !u!65 &2741034989539890016
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305106546267421965}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.38584745, y: 0.62497926, z: 0.97411484}
+  m_Center: {x: 9.524593e-16, y: 0.18751037, z: 0.4329765}
 --- !u!1 &354222994197184825
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,7 +206,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6735673723807663595}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CameraHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,7 +242,7 @@ GameObject:
   - component: {fileID: 4639891102971647562}
   - component: {fileID: 2742180243992231581}
   - component: {fileID: 6370116439793205990}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Leg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -315,7 +350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2597126755834899562}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FovHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -352,7 +387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1287438738139522609, guid: e7c3006b9ddc692499f4148463dbf986, type: 3}
       propertyPath: m_VersionIndex
-      value: 5188
+      value: 5194
       objectReference: {fileID: 0}
     - target: {fileID: 1287438738139522609, guid: e7c3006b9ddc692499f4148463dbf986, type: 3}
       propertyPath: m_Tangents.Array.data[0].z
@@ -662,6 +697,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FovMesh
       objectReference: {fileID: 0}
+    - target: {fileID: 3873097640642429099, guid: e7c3006b9ddc692499f4148463dbf986, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5484019015824099716, guid: e7c3006b9ddc692499f4148463dbf986, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -716,7 +755,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9219818188971050917, guid: e7c3006b9ddc692499f4148463dbf986, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9219818188971050917, guid: e7c3006b9ddc692499f4148463dbf986, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

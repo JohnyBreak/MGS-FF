@@ -1,22 +1,19 @@
 using System;
 using DamageSystem;
-using DG.Tweening;
 using UnityEngine;
 
 namespace SurveillanceCameraSystem
 {
-    public class BrokenState : IDisposable
+    public class DamageReceiver : IDisposable
     {
         private readonly Transform _parent;
-        private readonly Transform _head;
-        private readonly Action _onBroke;
+        private readonly Action<IDamage> _onDamage;
         private IDamageable[] _damageables;
         
-        public BrokenState(Transform parent, Transform head, Action onBroke)
+        public DamageReceiver(Transform parent, Action<IDamage> onDamage)
         {
             _parent = parent;
-            _head = head;
-            _onBroke = onBroke;
+            _onDamage = onDamage;
         }
 
         public void Init()
@@ -28,18 +25,13 @@ namespace SurveillanceCameraSystem
             }
         }
 
-        private void OnDamage(DamageInfo damageInfo)
+        private void OnDamage(IDamage damageInfo)
         {
-            //TODO: check if damage is valid
-            _onBroke?.Invoke();
+            _onDamage?.Invoke(damageInfo);
         }
 
         public void Enable()
         {
-            var angles = _head.localEulerAngles;
-            angles.x = 80;
-            _head.DOLocalRotate(angles, .2f).SetEase(Ease.Linear);
-            
             foreach (var damageable in _damageables)
             {
                 damageable.Toggle(false);
