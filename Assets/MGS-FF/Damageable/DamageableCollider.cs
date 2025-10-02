@@ -6,14 +6,14 @@ namespace DamageSystem
     [RequireComponent(typeof(Collider))]
     public class DamageableCollider : MonoBehaviour, IDamageable
     {
-        public event Action<DamageInfo> DamagedEvent;
+        public event Action<IDamage> DamagedEvent;
         private Collider _collider;
         private void Start()
         {
             _collider = GetComponent<Collider>();
         }
 
-        public void TakeDamage(DamageInfo damage)
+        public void TakeDamage(IDamage damage)
         {
             DamagedEvent?.Invoke(damage);
         }

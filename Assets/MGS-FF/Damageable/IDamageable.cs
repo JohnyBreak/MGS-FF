@@ -4,9 +4,9 @@ namespace DamageSystem
 {
     public interface IDamageable
     {
-        event Action<DamageInfo> DamagedEvent;
+        event Action<IDamage> DamagedEvent;
         
-        void TakeDamage(DamageInfo damage);
+        void TakeDamage(IDamage damage);
         void Toggle(bool isActive);
     }
 }
