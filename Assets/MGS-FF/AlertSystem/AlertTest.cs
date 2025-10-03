@@ -5,7 +5,7 @@ namespace AlertSystem
 {
     public class AlertTest : MonoBehaviour
     {
-        [SerializeField] private SurveillanceCamera[] _cameras;
+        [SerializeField] private SurveillanceCameraTest _cameras;
 
         [SerializeField] private AlertView _alertView;
         private Alert _alert;
@@ -14,7 +14,7 @@ namespace AlertSystem
         {
             _alert = new Alert(_alertView);
 
-            foreach (var cam in _cameras)
+            foreach (var cam in _cameras.Cameras)
             {
                 cam.TargetSpottedEvent += OnSpot;
                 cam.TargetLostEvent += OnLost;
@@ -33,7 +33,7 @@ namespace AlertSystem
 
         private void OnDestroy()
         {
-            foreach (var cam in _cameras)
+            foreach (var cam in _cameras.Cameras)
             {
                 cam.TargetSpottedEvent -= OnSpot;
                 cam.TargetLostEvent -= OnLost;

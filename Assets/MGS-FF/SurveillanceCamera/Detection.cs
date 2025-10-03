@@ -18,9 +18,10 @@ namespace SurveillanceCameraSystem
             _layerMask = layerMask;
             _collider = collider;
             _onTarget = onTarget;
+            Init();
         }
 
-        public void Init()
+        private void Init()
         {
             _collider
                 .OnTriggerEnterAsObservable()

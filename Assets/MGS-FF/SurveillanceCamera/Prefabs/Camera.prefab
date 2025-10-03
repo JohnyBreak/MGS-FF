@@ -133,8 +133,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 727661025497817265}
-  - component: {fileID: 8669620477794730575}
   - component: {fileID: 2741034989539890016}
+  - component: {fileID: 7271886849324256477}
   m_Layer: 8
   m_Name: Camera
   m_TagString: Untagged
@@ -159,23 +159,6 @@ Transform:
   - {fileID: 6735673723807663595}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &8669620477794730575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 305106546267421965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39c341abdf3650d4c9a896d714184df6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SurveillanceCameraView
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _collider: {fileID: 8376738079920952391}
-  _rotator: {fileID: 6735673723807663595}
 --- !u!65 &2741034989539890016
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -197,6 +180,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.38584745, y: 0.62497926, z: 0.97411484}
   m_Center: {x: 9.524593e-16, y: 0.18751037, z: 0.4329765}
+--- !u!114 &7271886849324256477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305106546267421965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f1328b3a8461a40bf0393484ab6462, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurveillanceCameraView
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _collider: {fileID: 8376738079920952391}
+  _rotator: {fileID: 6735673723807663595}
 --- !u!1 &354222994197184825
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1287438738139522609, guid: e7c3006b9ddc692499f4148463dbf986, type: 3}
       propertyPath: m_VersionIndex
-      value: 5194
+      value: 5218
       objectReference: {fileID: 0}
     - target: {fileID: 1287438738139522609, guid: e7c3006b9ddc692499f4148463dbf986, type: 3}
       propertyPath: m_Tangents.Array.data[0].z

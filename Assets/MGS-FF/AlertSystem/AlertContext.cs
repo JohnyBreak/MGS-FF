@@ -28,11 +28,16 @@ namespace AlertSystem
             ChangeState(AlertStateKeys.CalmState);
         }
 
-        private void ChangeState(int evasionState)
+        private void ChangeState(int stateKey)
         {
+            if (!_statesMap.ContainsKey(stateKey))
+            {
+                return;
+            }
+
             _currentState?.Exit();
 
-            _currentState = _statesMap[evasionState];
+            _currentState = _statesMap[stateKey];
             
             _currentState.Enter();
         }

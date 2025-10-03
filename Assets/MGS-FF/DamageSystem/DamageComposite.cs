@@ -4,19 +4,20 @@ using UnityEngine;
 
 namespace SurveillanceCameraSystem
 {
-    public class DamageReceiver : IDisposable
+    public class DamageComposite : IDisposable
     {
         private readonly Transform _parent;
         private readonly Action<IDamage> _onDamage;
         private IDamageable[] _damageables;
         
-        public DamageReceiver(Transform parent, Action<IDamage> onDamage)
+        public DamageComposite(Transform parent, Action<IDamage> onDamage)
         {
             _parent = parent;
             _onDamage = onDamage;
+            Init();
         }
 
-        public void Init()
+        private void Init()
         {
             _damageables = _parent.GetComponentsInChildren<IDamageable>();
             foreach (var damageable in _damageables)
@@ -30,22 +31,13 @@ namespace SurveillanceCameraSystem
             _onDamage?.Invoke(damageInfo);
         }
 
-        public void Enable()
+        public void Toggle(bool isActive)
         {
             foreach (var damageable in _damageables)
             {
-                damageable.Toggle(false);
+                damageable.Toggle(isActive);
             }
         }
-
-        public void Disable()
-        {
-            foreach (var damageable in _damageables)
-            {
-                damageable.Toggle(true);
-            }
-        }
-
 
         public void Dispose()
         {
