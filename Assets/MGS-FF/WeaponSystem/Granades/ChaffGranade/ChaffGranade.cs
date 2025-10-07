@@ -28,7 +28,7 @@ public class ChaffGranade : MonoBehaviour
     {
         // play fx
 
-        var colliders = Physics.OverlapSphere(transform.position, _explodeRadius, _layerMask);
+        var colliders = Physics.OverlapSphere(transform.position, _explodeRadius, _layerMask, QueryTriggerInteraction.Ignore);
 
         foreach (var col in colliders)
         {
