@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sensors
 {
     public class SightSensorBehaviour : MonoBehaviour
     {
+        public event Action OnScanEvent;
+        
         [SerializeField] private float _distance;
         [SerializeField] private float _angle;
         [SerializeField] private float _closeBottomHeight;
@@ -18,6 +22,8 @@ namespace Sensors
         
         private SightSensorMesh _sensorMesh;
         private SightSensorScanner _scanner;
+
+        public List<GameObject> Objects => _scanner.Objects;
         
         private void Start()
         {
@@ -36,6 +42,8 @@ namespace Sensors
                 _obstacleMask,
                 _pointsAmount,
                 _color);
+
+            _scanner.OnScanEvent += OnScan;
         }
 
         private void Update()
@@ -70,6 +78,16 @@ namespace Sensors
             {
                 _scanner.DrawGizmos();    
             }
+        }
+
+        private void OnScan()
+        {
+            OnScanEvent?.Invoke();
+        }
+
+        private void OnDestroy()
+        {
+            _scanner.OnScanEvent -= OnScan;
         }
     }
 }

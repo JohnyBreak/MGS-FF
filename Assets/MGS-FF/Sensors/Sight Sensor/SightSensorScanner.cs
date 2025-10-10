@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,6 +6,8 @@ namespace Sensors
 {
     public class SightSensorScanner
     {
+        public event Action OnScanEvent;
+        
         private Collider[] _collidersBuffer = new Collider[10];
         private SightSensorMesh _mesh;
         private readonly Transform _transform;
@@ -83,6 +86,7 @@ namespace Sensors
                     _objects.Add(obj);
                 }
             }
+            OnScanEvent?.Invoke();
         }
 
         private bool IsInSight(GameObject obj, Collider collider)

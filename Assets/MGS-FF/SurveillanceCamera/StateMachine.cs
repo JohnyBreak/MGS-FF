@@ -29,7 +29,7 @@ namespace SurveillanceCameraSystem
             _view = view;
             _onTargetSpotted = onTargetSpotted;
             _onTargetLost = onTargetLost;
-            _detection = new Detection(_view.LayerMask, _view.Collider, OnTarget);
+            _detection = new Detection(_view.SensorBehaviour, OnTarget);
 
             _damageComposite = new(view.transform, OnDamage);
             var follow = new FollowState(_view.Rotator, angle, followSpeed, GetTarget);

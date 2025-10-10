@@ -1,16 +1,14 @@
+using Sensors;
 using UnityEngine;
 
 namespace SurveillanceCameraSystem
 {
     public class SurveillanceCameraView : MonoBehaviour
     {
-        [SerializeField] private LayerMask _layerMask;
-        [SerializeField] private Collider _collider;
         [SerializeField] private Transform _rotator;
-    
-        public LayerMask LayerMask => _layerMask;
-        public Collider Collider => _collider;
+        [SerializeField] private SightSensorBehaviour _sensorBehaviour;
         public Transform Rotator => _rotator;
+        public SightSensorBehaviour SensorBehaviour => _sensorBehaviour;
     }
 }
 

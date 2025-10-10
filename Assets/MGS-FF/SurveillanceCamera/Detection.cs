@@ -1,4 +1,5 @@
 using System;
+using Sensors;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -8,63 +9,70 @@ namespace SurveillanceCameraSystem
     public class Detection : IDisposable
     {
         private CompositeDisposable _disposable = new();
-        private LayerMask _layerMask;
-        private Collider _collider;
+        private SightSensorBehaviour _sensorBehaviour;
         private readonly Action<Transform> _onTarget;
         private Coroutine _resetRoutine;
+        private bool _state;
         
-        public Detection(LayerMask layerMask, Collider collider, Action<Transform> onTarget)
+        public Detection(SightSensorBehaviour sensorBehaviour, Action<Transform> onTarget)
         {
-            _layerMask = layerMask;
-            _collider = collider;
+            _sensorBehaviour = sensorBehaviour;
             _onTarget = onTarget;
             Init();
         }
 
         private void Init()
         {
-            _collider
-                .OnTriggerEnterAsObservable()
-                .Subscribe(OnTriggerEnter)
-                .AddTo(_disposable);
-            _collider
-                .OnTriggerExitAsObservable()
-                .Subscribe(OnTriggerExit)
-                .AddTo(_disposable);
+            _sensorBehaviour.OnScanEvent += OnScan;
+            // _sensorBehaviour
+            //     .OnTriggerEnterAsObservable()
+            //     .Subscribe(OnTriggerEnter)
+            //     .AddTo(_disposable);
+            // _sensorBehaviour
+            //     .OnTriggerExitAsObservable()
+            //     .Subscribe(OnTriggerExit)
+            //     .AddTo(_disposable);
             Enable();
+        }
+
+        private void OnScan()
+        {
+            var oldState = _state;
+
+            _state = _sensorBehaviour.Objects.Count < 1;
+
+            if (oldState == _state)
+            {
+                return;
+            }
+
+            if (_state)
+            {
+                _onTarget?.Invoke(null);
+                return;
+            }
+            _onTarget?.Invoke(_sensorBehaviour.Objects[0].transform);
         }
 
         public void Enable()
         {
-            _collider.enabled = true;
+            if (_sensorBehaviour)
+            {
+                _sensorBehaviour.enabled = true;
+            }
         }
 
         public void Disable()
         {
-            _collider.enabled = false;
+            if (_sensorBehaviour)
+            {
+                _sensorBehaviour.enabled = false;
+            }
         }
         
-        private void OnTriggerEnter(Collider other)
-        {
-            if ((_layerMask.value & (1 << other.transform.gameObject.layer)) <= 0)
-            {
-                return;
-            }
-            _onTarget?.Invoke(other.transform);
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if ((_layerMask.value & (1 << other.transform.gameObject.layer)) <= 0)
-            {
-                return;
-            }
-            
-            _onTarget?.Invoke(null);
-        }
-
         public void Dispose()
         {
+            _sensorBehaviour.OnScanEvent -= OnScan;
             _disposable?.Dispose();
         }
     }
