@@ -6,6 +6,7 @@ namespace Collectables
     public class CollectablesTest : MonoBehaviour
     {
         [SerializeField] private CollectableObjectView _pistolAmmoView;
+        [SerializeField] private CollectableFloatingTextCanvas _canvas;
         
         private CollectableResolver _resolver;
         private TestCollectableContainer _container;
@@ -25,7 +26,7 @@ namespace Collectables
             //Debug.LogError(_container.PistolAmmo);
 
 
-            Instantiate(_pistolAmmoView, new Vector3(5, 1, 5), Quaternion.identity).Init(_resolver, pistolAmmo);
+            Instantiate(_pistolAmmoView, new Vector3(5, 1, 5), Quaternion.identity).Init(_resolver, pistolAmmo, _canvas);
         }
     }
 }
