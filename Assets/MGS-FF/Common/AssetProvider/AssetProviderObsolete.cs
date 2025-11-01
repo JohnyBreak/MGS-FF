@@ -1,175 +1,183 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using System;
+using Cysharp.Threading.Tasks;
+using Object = UnityEngine.Object;
 
-public class AssetProviderObsolete
+public sealed class AssetProvider : IDisposable
 {
-    private readonly Dictionary<string, AsyncOperationHandle> m_CompletedCache = new();
-    private readonly Dictionary<string, List<AsyncOperationHandle>> m_Handles = new();
-    private readonly Dictionary<string, List<GameObject>> m_SpawnedObjects = new();
+    private readonly HashSet<AsyncOperationHandle> _activeHandles = new();
+    private readonly Dictionary<string, AsyncOperationHandle> _loadedHandles = new();
+    private readonly List<GameObject> _spawnedInstances = new();
+    private readonly Dictionary<string, int> _refCounts = new(); 
 
-    public T LoadAssetSync<T>(string key) where T : UnityEngine.Object
+    public async UniTask<AsyncOperationHandle<T>> LoadAssetAsyncWithHandle<T>(string key) where T : Object
     {
-        var result = Addressables.LoadAssetAsync<T>(key).WaitForCompletion();
-        return result;
+        var handle = Addressables.LoadAssetAsync<T>(key);
+        _activeHandles.Add(handle);
+        _loadedHandles[key] = handle;
+        await handle.ToUniTask();
+        return handle;
+    }
+
+    public async UniTask<AsyncOperationHandle<T>> LoadAssetAsyncWithHandle<T>(AssetReference reference) where T : Object
+    {
+        return await LoadAssetAsyncWithHandle<T>(reference.AssetGUID);
     }
     
-    public async Task<T> LoadAssetAsync<T>(AssetReference reference) where T : class
+    public async UniTask<T> LoadAssetAsync<T>(string key) where T : Object
+    {
+        if (IncrementRefCount(key))
+        {
+            var cachedHandle = _loadedHandles[key];
+            return cachedHandle.Result as T;
+        }
+        
+        var handle = Addressables.LoadAssetAsync<T>(key);
+        _activeHandles.Add(handle);
+        _loadedHandles[key] = handle;
+        
+        await handle.ToUniTask();
+        return handle.Result;
+    }
+    
+    public async UniTask<T> LoadAssetAsync<T>(AssetReference reference) where T : Object
     {
         return await LoadAssetAsync<T>(reference.AssetGUID);
     }
-
-    public async Task<T> LoadAssetAsync<T>(string key) where T : class
+    
+    public void Release<T>(AsyncOperationHandle<T> handle)
     {
-        if (m_CompletedCache.TryGetValue(key, out AsyncOperationHandle completedHandle))
+        if (handle.IsValid())
         {
-            return completedHandle.Result as T;
+            Addressables.Release(handle);
+            _activeHandles.Remove(handle);
         }
-
-        AsyncOperationHandle<T> enquedOperationHandle = Addressables.LoadAssetAsync<T>(key);
-
-        enquedOperationHandle.Completed += completedOperationHandle =>
-        {
-            CompleteHandle(
-                key,
-                completedOperationHandle,
-                enquedOperationHandle);
-        };
-
-        AddHandle(key, enquedOperationHandle);
-
-        return await enquedOperationHandle.Task;
-    }
-
-    public void CleanUp()
-    {
-        foreach (var pair in m_SpawnedObjects)
-        {
-            foreach (var asset in pair.Value)
-            {
-                ReleaseAsset(pair.Key, asset);
-            }
-        }
-
-        m_SpawnedObjects.Clear();
-
-        foreach (List<AsyncOperationHandle> handlesList in m_Handles.Values)
-        {
-            foreach (AsyncOperationHandle handle in handlesList)
-            {
-                if (handle.IsValid())
-                {
-                    Addressables.Release(handle);
-                }
-            }
-        }
-
-        m_Handles.Clear();
-
-        foreach (AsyncOperationHandle asyncOperationHandle in m_CompletedCache.Values)
-        {
-            if (asyncOperationHandle.IsValid())
-            {
-                Addressables.Release(asyncOperationHandle);
-            }
-        }
-
-        m_CompletedCache.Clear();
-    }
-
-    public async Task<GameObject> InstantiateAsync(AssetReference assetReference)
-    {
-        return await InstantiateAsync(assetReference.AssetGUID);
-    }
-
-    public async Task<GameObject> InstantiateAsync(string key)
-    {
-        if (m_CompletedCache.ContainsKey(key) == false)
-        {
-            await LoadAssetAsync<GameObject>(key);
-        }
-
-        var instanceHandle = Addressables.InstantiateAsync(key);
-        GameObject obj = await instanceHandle.Task;
-        if (!m_SpawnedObjects.TryGetValue(key, out List<GameObject> gameObjectList))
-        {
-            gameObjectList = new List<GameObject>();
-            m_SpawnedObjects[key] = gameObjectList;
-        }
-
-        m_SpawnedObjects[key].Add(obj);
-
-        return obj;
-    }
-
-    public void ReleaseAsset(AssetReference assetReference, GameObject assetObject)
-    {
-        ReleaseAsset(assetReference.AssetGUID, assetObject);
-    }
-
-    public void Release(AssetReference assetReference)
-    {
-        Release(assetReference.AssetGUID);
     }
 
     public void Release(string key)
     {
-        if (m_CompletedCache.TryGetValue(key, out AsyncOperationHandle operation))
+        if (!_loadedHandles.TryGetValue(key, out var handle))
         {
-            Addressables.Release(operation);
-            m_CompletedCache.Remove(key);
+            return;
         }
-    }
-
-    public void ReleaseAsset(string key, GameObject assetObject)
-    {
-        Addressables.ReleaseInstance(assetObject);
-        m_SpawnedObjects[key].Remove(assetObject);
-        if (m_SpawnedObjects[key].Count == 0)
+        
+        if (!handle.IsValid())
         {
-            if (m_CompletedCache.ContainsKey(key) == false)
-            {
-                return;
-            }
-
-            if (m_CompletedCache[key].IsValid() == false)
-            {
-                return;
-            }
-
-            var completedHandle = m_CompletedCache[key];
-            Addressables.Release(completedHandle);
-            m_CompletedCache.Remove(key);
-            m_Handles.Remove(key);
-        }
-    }
-
-    private void AddHandle<T>(string key, AsyncOperationHandle<T> operationHandle) where T : class
-    {
-        if (!m_Handles.TryGetValue(key, out List<AsyncOperationHandle> handleList))
-        {
-            handleList = new List<AsyncOperationHandle>();
-            m_Handles[key] = handleList;
+            _loadedHandles.Remove(key);
+            _refCounts.Remove(key);
+            return;
         }
 
-        handleList.Add(operationHandle);
-    }
-
-    private void CompleteHandle<T>(string key, AsyncOperationHandle<T> completedOperationHandle,
-        AsyncOperationHandle<T> enquedOperationHandle) where T : class
-    {
-        m_CompletedCache[key] = completedOperationHandle;
-        List<AsyncOperationHandle> handlesList = m_Handles[key];
-        if (handlesList != null && handlesList.Count > 0)
+        _refCounts[key]--;
+        if (_refCounts[key] > 0)
         {
-            handlesList.Remove(enquedOperationHandle);
+            return;
         }
+        
+        Addressables.Release(handle);
+        _activeHandles.Remove(handle);
+        _loadedHandles.Remove(key);
+        _refCounts.Remove(key);
+    }
+    
+    public T LoadAssetSync<T>(string key) where T : Object
+    {
+        if (IncrementRefCount(key))
+        {
+            var cachedHandle = _loadedHandles[key];
+            return cachedHandle.Result as T;
+        }
+        
+        var handle = Addressables.LoadAssetAsync<T>(key);
+        handle.WaitForCompletion();
+
+        _activeHandles.Add(handle);
+        _loadedHandles[key] = handle;
+
+        return handle.Result;
     }
 
-    public void OnDestroy()
+    public T LoadAssetSync<T>(AssetReference reference) where T : Object
     {
-        CleanUp();
+        return LoadAssetSync<T>(reference.AssetGUID);
     }
+
+    public async UniTask<GameObject> InstantiateAsync(string key, Transform parent = null)
+    {
+        var handle = Addressables.InstantiateAsync(key, parent);
+        _activeHandles.Add(handle);
+        var instance = await handle.ToUniTask();
+
+        _spawnedInstances.Add(instance);
+        return instance;
+    }
+
+    public async UniTask<GameObject> InstantiateAsync(AssetReference reference, Transform parent = null)
+    {
+        return await InstantiateAsync(reference.AssetGUID, parent);
+    }
+
+    public GameObject InstantiateSync(string key, Transform parent = null)
+    {
+        var handle = Addressables.InstantiateAsync(key, parent);
+        handle.WaitForCompletion();
+
+        _activeHandles.Add(handle);
+        var instance = handle.Result;
+        _spawnedInstances.Add(instance);
+
+        return instance;
+    }
+
+    public GameObject InstantiateSync(AssetReference reference, Transform parent = null)
+    {
+        return InstantiateSync(reference.AssetGUID, parent);
+    }
+
+    public void ReleaseInstance(GameObject instance)
+    {
+        if (instance == null) return;
+
+        Addressables.ReleaseInstance(instance);
+        _spawnedInstances.Remove(instance);
+    }
+
+    public void CleanUp()
+    {
+        foreach (var instance in _spawnedInstances)
+        {
+            if (instance != null)
+                Addressables.ReleaseInstance(instance);
+        }
+        _spawnedInstances.Clear();
+
+        foreach (var handle in _activeHandles)
+        {
+            if (handle.IsValid())
+                Addressables.Release(handle);
+        }
+        _activeHandles.Clear();
+        _loadedHandles.Clear();
+
+        // (опционально) Можно принудительно освободить память:
+        // Resources.UnloadUnusedAssets().Forget();
+        // System.GC.Collect();
+    }
+    
+    private bool IncrementRefCount(string key)
+    {
+        if (_refCounts.TryGetValue(key, out int count))
+        {
+            _refCounts[key] = count + 1;
+            return _loadedHandles.ContainsKey(key);
+        }
+
+        _refCounts[key] = 1;
+        return false;
+    }
+    
+    public void Dispose() => CleanUp();
 }
