@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class ServiceLocator
 {
@@ -10,19 +11,18 @@ public static class ServiceLocator
         var type = typeof(T);
         if (_services.ContainsKey(type))
         {
+            Debug.LogError($"[ServiceLocator] service with type {typeof(T)} already registered");
+            return;
             _services[type] = service;
         }
-        else
-        {
-            _services.Add(type, service);
-        }
+
+        _services.Add(type, service);
     }
 
     public static void Unregister<T>()
     {
         var type = typeof(T);
-        if (_services.ContainsKey(type))
-            _services.Remove(type);
+        _services.Remove(type);
     }
 
     public static T Get<T>()
