@@ -1,16 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseCanvas : MonoBehaviour
+public class PauseCanvas : MonoBehaviour, IInitable
 {
     [SerializeField] private Button _gameButton;
     [SerializeField] private Button _exitButton;
     
-    public void Awake()
+    public void Init()
     {
-        ServiceLocator.Register(this);
+        _gameButton.onClick.RemoveAllListeners();
+        _exitButton.onClick.RemoveAllListeners();
+        
         _gameButton.onClick.AddListener(Resume);
         _exitButton.onClick.AddListener(BackToMenu);
+        
         gameObject.SetActive(false);
     }
     
@@ -32,6 +35,7 @@ public class PauseCanvas : MonoBehaviour
     
     private void OnDestroy()
     {
+        ServiceLocator.Unregister<PauseCanvas>();
         _gameButton.onClick.RemoveListener(Resume);
         _exitButton.onClick.RemoveListener(BackToMenu);
     }

@@ -8,13 +8,18 @@ public class MenuBehaviour : MonoBehaviour, IInitable
     
     public void Init()
     {
+        _gameButton.onClick.RemoveAllListeners();
+        _exitButton.onClick.RemoveAllListeners();
+        
         _gameButton.onClick.AddListener(GoToGame);
         _exitButton.onClick.AddListener(Exit);
     }
 
     private void GoToGame()
     {
-        ServiceLocator.Get<SceneLoader>().LoadSceneAsync("Playground").Forget();
+        var sceneLoader = ServiceLocator.Get<SceneLoader>();
+        sceneLoader.LoadSceneAsync("Core", true, false).Forget();
+        sceneLoader.LoadAdditiveSceneAsync("Playground 1");
     }
     
     private void Exit()

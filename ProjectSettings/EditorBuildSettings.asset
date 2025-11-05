@@ -6,8 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/MGS-FF/Scenes/Playground.unity
+    path: Assets/MGS-FF/Scenes/Menu.unity
+    guid: 9549da835c048d047adb8162cf53ed6a
+  - enabled: 1
+    path: Assets/MGS-FF/Scenes/Core.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/MGS-FF/Scenes/Playground 1.unity
+    guid: b0336fd5c713dc641af06212b3c80edc
+  - enabled: 1
+    path: Assets/MGS-FF/Scenes/Playground 2.unity
+    guid: 2e241180ebe74104099fd9a08f33db65
+  - enabled: 1
+    path: Assets/MGS-FF/Scenes/Playground 3.unity
+    guid: f53a2deb9b2a75649854b1e86bdb4f39
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 3dd989091fa296d4d99c10351160018f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

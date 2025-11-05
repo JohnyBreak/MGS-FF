@@ -6,6 +6,8 @@ public class MenuBootstrapper : MonoBehaviour
     [SerializeField] private LoaderCanvas _loaderCanvas;
     [SerializeField] private MenuBehaviour _menuBehaviour;
     
+    
+    
     private void Start()
     {
         ServiceLocator.Register(_sceneLoader);
