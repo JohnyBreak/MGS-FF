@@ -4,9 +4,15 @@ namespace UnitStateMachine
 {
     public class AirState : BaseState
     {
-        public AirState(StateMachine currentContext, StateFactory unitStateFactory)
+        private readonly PlayerInfoContainer _container;
+
+        public AirState(
+            StateMachine currentContext, 
+            StateFactory unitStateFactory,
+            PlayerInfoContainer container)
             : base(currentContext, unitStateFactory)
         {
+            _container = container;
             _isRootState = true;
         }
 
@@ -23,6 +29,7 @@ namespace UnitStateMachine
 
         public override void UpdateState()
         {
+            _container.PlayerTransform.Translate(Vector3.down * (_container.FallSpeed * Time.deltaTime));
         }
 
         public override void ExitState()
@@ -32,7 +39,7 @@ namespace UnitStateMachine
 
         public override void CheckSwitchState()
         {
-            if (Input.GetKeyDown(KeyCode.G))
+            if (_container.GroundCheck.IsGrounded)
             {
                 SwitchState(_factory.Get(States.Grounded));
             }
