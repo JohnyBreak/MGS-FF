@@ -2,7 +2,6 @@ namespace UnitStateMachine
 {
     public abstract class BaseState
     {
-        protected bool _isRootState = false;
         protected StateMachine _ctx;
         protected StateFactory _factory;
         protected BaseState _currentSuperState;
@@ -11,26 +10,24 @@ namespace UnitStateMachine
         public abstract int Key();
 
         public abstract void EnterState();
-        public abstract void UpdateState();
+        public abstract void OnUpdateState();
         public abstract void ExitState();
         public abstract void CheckSwitchState();
         public abstract void InitializeSubState();
 
-        public BaseState(StateMachine currentContext, StateFactory unitStateFactory)
+        protected BaseState(StateMachine currentContext, StateFactory unitStateFactory)
         {
             _ctx = currentContext;
             _factory = unitStateFactory;
         }
 
-        public void Update()
+        public void UpdateStates()
         {
-            UpdateStates();
-        }
-
-        private void UpdateStates()
-        {
-            UpdateState();
-            if (_currentSubState != null) _currentSubState.Update();
+            OnUpdateState();
+            if (_currentSubState != null)
+            {
+                _currentSubState.UpdateStates();
+            }
             CheckSwitchState();
         }
     
@@ -39,7 +36,8 @@ namespace UnitStateMachine
             ExitState();
 
             newState.EnterState();
-            if (_isRootState)
+            
+            if (this is IRootState)
             {
                 _ctx.SetState(newState);
             }
@@ -49,7 +47,7 @@ namespace UnitStateMachine
             }
         }
 
-        protected void SetSuperState(BaseState newSuperState)
+        private void SetSuperState(BaseState newSuperState)
         {
             _currentSuperState = newSuperState;
         }
@@ -63,7 +61,10 @@ namespace UnitStateMachine
         public void ExitStates()
         {
             ExitState();
-            if (_currentSubState != null) _currentSubState.ExitStates();
+            if (_currentSubState != null)
+            {
+                _currentSubState.ExitStates();
+            }
         }
     }
 }

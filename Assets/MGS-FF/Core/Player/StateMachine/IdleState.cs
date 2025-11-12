@@ -4,15 +4,15 @@ namespace UnitStateMachine
 {
     public class IdleState : BaseState
     {
-        private readonly PlayerInfoContainer _infoContainer;
+        private readonly PlayerInfoContainer _container;
 
         public IdleState(
             StateMachine currentContext, 
             StateFactory unitStateFactory, 
-            PlayerInfoContainer infoContainer)
+            PlayerInfoContainer container)
             : base(currentContext, unitStateFactory)
         {
-            _infoContainer = infoContainer;
+            _container = container;
         }
 
         public override int Key()
@@ -22,10 +22,11 @@ namespace UnitStateMachine
 
         public override void EnterState()
         {
+            _container.MoveVector = Vector3.zero;
             Debug.Log("Enter Idle");
         }
 
-        public override void UpdateState()
+        public override void OnUpdateState()
         {
         }
 
@@ -36,7 +37,7 @@ namespace UnitStateMachine
 
         public override void CheckSwitchState()
         {
-            if (_infoContainer.MoveVector != Vector3.zero)
+            if (_container.MoveVector != Vector3.zero)
             {
                 SwitchState(_factory.Get(States.Move));
             }

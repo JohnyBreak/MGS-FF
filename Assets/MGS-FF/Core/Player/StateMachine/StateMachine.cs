@@ -10,7 +10,7 @@ namespace UnitStateMachine
         
         public void Start()
         {
-            _currentState.EnterState();
+            _currentState?.EnterState();
         }
         
         public void SetState(BaseState newState)
@@ -20,7 +20,7 @@ namespace UnitStateMachine
 
         public void Update()
         {
-            _currentState.Update();
+            _currentState?.UpdateStates();
         }
     }
 }

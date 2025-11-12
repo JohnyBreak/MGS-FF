@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnitStateMachine
 {
-    public class AirState : BaseState
+    public class AirState : BaseState, IRootState
     {
         private readonly PlayerInfoContainer _container;
 
@@ -13,7 +13,6 @@ namespace UnitStateMachine
             : base(currentContext, unitStateFactory)
         {
             _container = container;
-            _isRootState = true;
         }
 
         public override int Key()
@@ -27,9 +26,14 @@ namespace UnitStateMachine
             Debug.Log("Enter Air");
         }
 
-        public override void UpdateState()
+        public override void OnUpdateState()
         {
-            _container.PlayerTransform.Translate(Vector3.down * (_container.FallSpeed * Time.deltaTime));
+            _container.GroundCheck.Check();
+            _container.YVector = Vector3.down * (_container.FallSpeed * Time.deltaTime);
+            _container.YVector.z = 0;
+            _container.YVector.x = 0;
+            
+            _container.CharacterController.Move(_container.YVector);
         }
 
         public override void ExitState()
@@ -39,6 +43,7 @@ namespace UnitStateMachine
 
         public override void CheckSwitchState()
         {
+            _container.GroundCheck.Check();
             if (_container.GroundCheck.IsGrounded)
             {
                 SwitchState(_factory.Get(States.Grounded));
