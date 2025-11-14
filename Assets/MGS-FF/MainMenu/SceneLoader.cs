@@ -63,7 +63,7 @@ public class SceneLoader : MonoBehaviour, IInitable
     
     public void ReloadActiveScene()
     {
-        LoadSceneAsync(SceneManager.GetActiveScene().name);
+        LoadSceneAsync(SceneManager.GetActiveScene().name).Forget();
     }
     
     public string GetActiveSceneName() => SceneManager.GetActiveScene().name;

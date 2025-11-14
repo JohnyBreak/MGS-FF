@@ -13,7 +13,7 @@ public static class ServiceLocator
         {
             Debug.LogError($"[ServiceLocator] service with type {typeof(T)} already registered");
             return;
-            _services[type] = service;
+            //_services[type] = service;
         }
 
         _services.Add(type, service);

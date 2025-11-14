@@ -19,7 +19,7 @@ public class MenuBehaviour : MonoBehaviour, IInitable
     {
         var sceneLoader = ServiceLocator.Get<SceneLoader>();
         sceneLoader.LoadSceneAsync("Core", true, false).Forget();
-        sceneLoader.LoadAdditiveSceneAsync("Playground 1");
+        sceneLoader.LoadAdditiveSceneAsync("Playground 1").Forget();
     }
     
     private void Exit()
