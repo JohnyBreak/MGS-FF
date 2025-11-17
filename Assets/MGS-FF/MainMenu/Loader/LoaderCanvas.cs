@@ -1,4 +1,5 @@
 using UnityEngine;
+using Infrastructure.ServiceLocator;
 
 public class LoaderCanvas : MonoBehaviour, IInitable
 {

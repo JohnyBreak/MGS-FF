@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Infrastructure.ServiceLocator;
 
 public class MenuBehaviour : MonoBehaviour, IInitable
 {

@@ -1,3 +1,4 @@
+using Infrastructure.ServiceLocator;
 using UnityEngine;
 
 public class CoreBootstrap : MonoBehaviour

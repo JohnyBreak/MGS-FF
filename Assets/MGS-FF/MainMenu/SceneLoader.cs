@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Infrastructure.ServiceLocator;
 
 public class SceneLoader : MonoBehaviour, IInitable
 {
@@ -14,7 +15,6 @@ public class SceneLoader : MonoBehaviour, IInitable
     public void Init()
     {
         DontDestroyOnLoad(gameObject);
-        //ServiceLocator.Register(this);
     }
 
     public async UniTaskVoid LoadSceneAsync(string sceneName, bool needShowLoader = true, bool needHideLoader = true)

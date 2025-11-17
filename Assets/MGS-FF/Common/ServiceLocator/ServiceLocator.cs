@@ -2,47 +2,49 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ServiceLocator
+namespace Infrastructure.ServiceLocator
 {
-    private static readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
-
-    public static void Register<T>(T service)
+    public static class ServiceLocator
     {
-        var type = typeof(T);
-        if (_services.ContainsKey(type))
+        private static readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
+
+        public static void Register<T>(T service)
         {
-            Debug.LogError($"[ServiceLocator] service with type {typeof(T)} already registered");
-            return;
-            //_services[type] = service;
+            var type = typeof(T);
+            if (_services.ContainsKey(type))
+            {
+                Debug.LogError($"[ServiceLocator] service with type {typeof(T)} already registered");
+                return;
+            }
+
+            _services.Add(type, service);
         }
 
-        _services.Add(type, service);
-    }
-
-    public static void Unregister<T>()
-    {
-        var type = typeof(T);
-        _services.Remove(type);
-    }
-
-    public static T Get<T>()
-    {
-        var type = typeof(T);
-        if (_services.TryGetValue(type, out var service))
+        public static void Unregister<T>()
         {
-            return (T)service;
+            var type = typeof(T);
+            _services.Remove(type);
         }
 
-        throw new Exception($"Service of type {type.Name} is not registered in ServiceLocator.");
-    }
+        public static T Get<T>()
+        {
+            var type = typeof(T);
+            if (_services.TryGetValue(type, out var service))
+            {
+                return (T)service;
+            }
 
-    public static bool IsRegistered<T>()
-    {
-        return _services.ContainsKey(typeof(T));
-    }
+            throw new Exception($"Service of type {type.Name} is not registered in ServiceLocator.");
+        }
 
-    public static void Clear()
-    {
-        _services.Clear();
+        public static bool IsRegistered<T>()
+        {
+            return _services.ContainsKey(typeof(T));
+        }
+
+        public static void Clear()
+        {
+            _services.Clear();
+        }
     }
 }
