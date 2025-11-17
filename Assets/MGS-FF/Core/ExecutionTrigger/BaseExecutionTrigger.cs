@@ -4,12 +4,11 @@ namespace ExecutionTriggers
 {
     public abstract class BaseExecutionTrigger : MonoBehaviour
     {
-        [SerializeField] protected LayerMask _mask;
         [SerializeField] protected BaseTriggerExecutor[] _executors;
         
         private void OnTriggerEnter(Collider other)
         {
-            if (((1 << other.gameObject.layer) & _mask) == 0)
+            if(Predicate(other) == false)
             {
                 return;
             }
@@ -17,6 +16,7 @@ namespace ExecutionTriggers
             OnEnter(other);
         }
 
+        protected abstract bool Predicate(Collider other);
         protected abstract void OnEnter(Collider other);
     }
 }
