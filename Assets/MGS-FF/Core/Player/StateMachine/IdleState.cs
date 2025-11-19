@@ -23,7 +23,6 @@ namespace UnitStateMachine
         public override void EnterState()
         {
             _container.MoveVector = Vector3.zero;
-            Debug.Log("Enter Idle");
         }
 
         public override void OnUpdateState()
@@ -32,7 +31,6 @@ namespace UnitStateMachine
 
         public override void ExitState()
         {
-            Debug.Log("Exit Idle");
         }
 
         public override void CheckSwitchState()

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Infrastructure.ServiceLocator;
+using LevelManagement;
 
 public class SceneLoadTrigger : MonoBehaviour
 {
@@ -7,11 +8,11 @@ public class SceneLoadTrigger : MonoBehaviour
     [SerializeField] private string[] _scenesToLoad;
     [SerializeField] private string[] _scenesToUnload;
 
-    private SceneLoader _sceneLoader;
+    private ILevelLoader _levelLoader;
 
     private void Start()
     {
-        _sceneLoader = ServiceLocator.Get<SceneLoader>();
+        _levelLoader = ServiceLocator.Get<ILevelLoader>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -21,13 +22,13 @@ public class SceneLoadTrigger : MonoBehaviour
             return;
         }
 
-        LoadScenes();
-        UnLoadScenes();
+        LoadLevels();
+        UnLoadLevels();
     }
 
-    private void LoadScenes()
+    private void LoadLevels()
     {
-        if (_sceneLoader == null)
+        if (_levelLoader == null)
         {
             Debug.LogError($"[SceneLoadTrigger] at {transform.position} _sceneLoader == null");
             return;
@@ -35,30 +36,30 @@ public class SceneLoadTrigger : MonoBehaviour
 
         foreach (var sceneName in _scenesToLoad)
         {
-            if (_sceneLoader.IsLoaded(sceneName))
+            if (_levelLoader.IsLoaded(sceneName))
             {
                 continue;
             }
 
-            _sceneLoader.LoadAdditiveSceneAsync(sceneName).Forget();
+            _levelLoader.LoadLevelAsync(sceneName);
         }
     }
 
-    private void UnLoadScenes()
+    private void UnLoadLevels()
     {
-        if (_sceneLoader == null)
+        if (_levelLoader == null)
         {
             Debug.LogError($"[SceneLoadTrigger] at {transform.position} _sceneLoader == null");
             return;
         }
         foreach (var sceneName in _scenesToUnload)
         {
-            if (!_sceneLoader.IsLoaded(sceneName))
+            if (!_levelLoader.IsLoaded(sceneName))
             {
                 continue;
             }
 
-            _sceneLoader.UnLoadSceneAsync(sceneName).Forget();
+            _levelLoader.UnLoadSceneAsync(sceneName);
         }
     }
 }

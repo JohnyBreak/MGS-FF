@@ -23,7 +23,6 @@ namespace UnitStateMachine
         public override void EnterState()
         {
             InitializeSubState();
-            Debug.Log("Enter GroundedState");
         }
 
         public override void OnUpdateState()
@@ -54,7 +53,7 @@ namespace UnitStateMachine
 
         public override void ExitState()
         {
-            Debug.Log("Exit GroundedState");
+            
         }
 
         public override void CheckSwitchState()

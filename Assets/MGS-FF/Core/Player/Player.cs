@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private Transform _groundCheckT;
+    [SerializeField] private Transform _lookAt;
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private float _groundCheckRadius = 0.35f;
@@ -19,8 +20,15 @@ public class Player : MonoBehaviour
     private GroundCheck _check;
     private PlayerInfoContainer _infoContainer;
 
-    private void Start()
+    public Transform LookAt => _lookAt;
+    
+    public void Init(Transform cameraTransform)
     {
+        if (!_cameraTransform)
+        {
+            _cameraTransform = cameraTransform;
+        }
+
         _factory = new StateFactory();
         _stateMachine = new StateMachine();
         _infoContainer = new PlayerInfoContainer();

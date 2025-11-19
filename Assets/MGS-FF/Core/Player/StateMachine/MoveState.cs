@@ -53,7 +53,6 @@ namespace UnitStateMachine
 
         public override void ExitState()
         {
-            Debug.Log("Exit MoveState");
         }
 
         public override void CheckSwitchState()
