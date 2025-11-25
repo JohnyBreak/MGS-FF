@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Collectables.View;
 using UnityEngine;
 
-namespace Collectables
+namespace Collectables.UI
 {
     // сделать канвас для текста, пропихнуть во все коллектаблы метод вызова текста и скрытия текста
     // сделать один апдейт чтобы обновлять все тексты

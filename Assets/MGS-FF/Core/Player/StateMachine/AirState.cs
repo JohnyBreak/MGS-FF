@@ -23,7 +23,6 @@ namespace UnitStateMachine
         public override void EnterState()
         {
             InitializeSubState();
-            Debug.Log("Enter Air");
         }
 
         public override void OnUpdateState()
@@ -38,7 +37,6 @@ namespace UnitStateMachine
 
         public override void ExitState()
         {
-            Debug.Log("Exit Air");
         }
 
         public override void CheckSwitchState()

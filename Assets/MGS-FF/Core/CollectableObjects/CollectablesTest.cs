@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Collectables.UI;
+using Collectables.View;
 using UnityEngine;
 
 namespace Collectables

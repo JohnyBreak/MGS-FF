@@ -1,16 +1,11 @@
+using Collectables.UI;
 using DG.Tweening;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-namespace Collectables
+namespace Collectables.View
 {
-    public interface ICollectableView
-    {
-        void Init(CollectableResolver resolver, ICollectableObject collectable, CollectableFloatingTextCanvas canvas);
-        void Collect();
-    }
-
     public class CollectableObjectView : MonoBehaviour, ICollectableView
     {
         [SerializeField] private Collider _collider;

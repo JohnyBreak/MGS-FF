@@ -1,18 +1,22 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class SceneExtension
+namespace LevelManagement
 {
-    public static T GetComponentOnRootObject<T>(this Scene scene) where T : Object
+    public static class SceneExtension
     {
-        foreach (var rootGameObject in scene.GetRootGameObjects())
+        public static T GetComponentOnRootObject<T>(this Scene scene) where T : Object
         {
-            if (rootGameObject.TryGetComponent<T>(out T component))
+            foreach (var rootGameObject in scene.GetRootGameObjects())
             {
-                return component;
+                if (rootGameObject.TryGetComponent<T>(out T component))
+                {
+                    return component;
+                }
             }
-        }
 
-        return null;
+            return null;
+        }
     }
 }
+

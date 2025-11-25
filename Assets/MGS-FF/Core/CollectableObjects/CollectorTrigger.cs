@@ -1,4 +1,4 @@
-using Collectables;
+using Collectables.View;
 using UnityEngine;
 
 public class CollectorTrigger : MonoBehaviour

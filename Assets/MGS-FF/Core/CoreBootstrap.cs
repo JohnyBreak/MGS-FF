@@ -1,14 +1,33 @@
+using System.Collections.Generic;
+using Collectables;
+using Collectables.UI;
 using Infrastructure.ServiceLocator;
 using LevelManagement;
 using UnityEngine;
 
 public class CoreBootstrap : MonoBehaviour
 {
+    [SerializeField] private CollectableFloatingTextCanvas _canvas;
+    
+    private TestCollectableContainer _container = new ();
+    
     private async void Start()
     {
         var assetProvider = new AssetProvider();
         ServiceLocator.Register(assetProvider);
-        ILevelLoader levelLoader = new LevelLoaderFacade(new LevelLoader(), new LevelInitializationService());
+        
+        var resolver = new CollectableResolver(new List<ICollector>()
+        {
+            new PistolAmmoCollector(_container)
+        });
+        
+        ILevelLoader levelLoader = new LevelLoaderFacade(
+            new LevelLoader(), 
+            new LevelInitializationService(
+                assetProvider, 
+                resolver, 
+                _canvas));
+        
         ServiceLocator.Register(levelLoader);
         
         var pauseCanvasPrefab = await assetProvider.LoadAssetAsync<GameObject>("PauseCanvas");

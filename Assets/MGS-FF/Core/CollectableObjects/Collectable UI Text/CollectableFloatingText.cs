@@ -2,34 +2,37 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public class CollectableFloatingText : MonoBehaviour
+namespace Collectables.UI
 {
-    [SerializeField] private TMP_Text _text;
-    private Sequence _sequence;
-
-    public void Show(string text)
+    public class CollectableFloatingText : MonoBehaviour
     {
-        _text.text = text;
-    }
+        [SerializeField] private TMP_Text _text;
+        private Sequence _sequence;
 
-    public void SetRedText()
-    {
-        _sequence?.Kill();
-        _sequence = DOTween.Sequence();
-        _sequence.Append(_text.DOColor(Color.red, 0.2f));
-        _sequence.AppendInterval(0.9f);
-        _sequence.Append(_text.DOColor(Color.white, 0.75f));
-    }
+        public void Show(string text)
+        {
+            _text.text = text;
+        }
 
-    public void UpdatePosition(Vector3 collectableScreenPosition)
-    {
-        transform.position = CorrectPosition(collectableScreenPosition);
-        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
-    }
+        public void SetRedText()
+        {
+            _sequence?.Kill();
+            _sequence = DOTween.Sequence();
+            _sequence.Append(_text.DOColor(Color.red, 0.2f));
+            _sequence.AppendInterval(0.9f);
+            _sequence.Append(_text.DOColor(Color.white, 0.75f));
+        }
 
-    private Vector3 CorrectPosition(Vector3 collectableScreenPosition)
-    {
-        //проверить, если текст выодит за границы экрана и пододвинуть его, что бы был виден целиком
-        return collectableScreenPosition;
+        public void UpdatePosition(Vector3 collectableScreenPosition)
+        {
+            transform.position = CorrectPosition(collectableScreenPosition);
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+        }
+
+        private Vector3 CorrectPosition(Vector3 collectableScreenPosition)
+        {
+            //проверить, если текст выодит за границы экрана и пододвинуть его, что бы был виден целиком
+            return collectableScreenPosition;
+        }
     }
 }
