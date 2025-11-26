@@ -21,7 +21,12 @@ public class Player : MonoBehaviour
     private PlayerInfoContainer _infoContainer;
 
     public Transform LookAt => _lookAt;
-    
+
+    private void Start()
+    {
+        Init(_cameraTransform);
+    }
+
     public void Init(Transform cameraTransform)
     {
         if (!_cameraTransform)

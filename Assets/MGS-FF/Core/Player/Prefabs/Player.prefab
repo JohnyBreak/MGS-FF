@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2176703110807301734}
   - component: {fileID: 7840448296905280366}
   - component: {fileID: 7345913907756012657}
+  - component: {fileID: 8071337373408868495}
+  - component: {fileID: 4356166438518130325}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -85,6 +87,31 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.1, z: 0}
+--- !u!114 &8071337373408868495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664425904294021701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 404a023cf75657847b463fe43afa6ff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerIntaraction
+  _container: {fileID: 4356166438518130325}
+--- !u!114 &4356166438518130325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664425904294021701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6addb4d4ee8678c4a82e658080633c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractTargetContainer
 --- !u!1 &2469991614559554022
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,6 +273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3831853859627473043}
   - component: {fileID: 5743887708098309076}
+  - component: {fileID: 2475024443794080084}
   m_Layer: 6
   m_Name: View
   m_TagString: Untagged
@@ -286,3 +314,21 @@ MonoBehaviour:
     m_Bits: 128
   _radius: 1
   _drawDebug: 1
+--- !u!114 &2475024443794080084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6501559637626560146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13767d411265fa340acddfec5d88b2bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractSystem.InteractScaner
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  _radius: 1.1
+  _drawDebug: 1
+  _container: {fileID: 4356166438518130325}
