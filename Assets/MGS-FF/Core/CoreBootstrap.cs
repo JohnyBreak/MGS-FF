@@ -16,14 +16,9 @@ public class CoreBootstrap : MonoBehaviour
         var assetProvider = new AssetProvider();
         ServiceLocator.Register(assetProvider);
         
-        var resolver = new CollectableResolver(new List<ICollector>()
-        {
-            new PistolAmmoCollector(_container)
-        });
-
         CollectableService collectableService = new CollectableService(
             assetProvider,
-            resolver,
+            _container,
             _canvas);
         
         ILevelLoader levelLoader = new LevelLoaderFacade(
@@ -35,6 +30,7 @@ public class CoreBootstrap : MonoBehaviour
         var pauseCanvasPrefab = await assetProvider.LoadAssetAsync<GameObject>("PauseCanvas");
         var instantiatedPauseCanvas = Instantiate(pauseCanvasPrefab);
         var pauseCanvas = instantiatedPauseCanvas.GetComponent<PauseCanvas>();
+        
         ServiceLocator.Register(pauseCanvas);
         pauseCanvas.Init();
         
