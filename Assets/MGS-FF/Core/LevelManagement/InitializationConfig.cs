@@ -19,5 +19,10 @@ namespace LevelManagement
                 })
             };
         }
+
+        public static InitializationConfig EmptyConfig()
+        {
+            return new InitializationConfig() { Entries = new List<IOperation>() };
+        }
     }
 }

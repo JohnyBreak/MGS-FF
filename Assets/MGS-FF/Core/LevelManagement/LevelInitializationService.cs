@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Collectables;
-using Collectables.UI;
 using Cysharp.Threading.Tasks;
 
 namespace LevelManagement
@@ -41,7 +40,12 @@ namespace LevelManagement
 
         private InitializationConfig GetConfig(string getLevelKey)
         {
-            return new InitializationConfig();
+            if (getLevelKey == "First")
+            {
+                return new InitializationConfig();
+            }
+
+            return InitializationConfig.EmptyConfig();
         }
     }
 }
