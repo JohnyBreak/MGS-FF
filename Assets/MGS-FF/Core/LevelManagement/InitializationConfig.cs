@@ -14,8 +14,8 @@ namespace LevelManagement
             {
                 new LootSpawnOperation(new[]
                 {
-                    new LootSpawnEntry(CollectablesTypes.PistolAmmo, Vector3.forward * 2),
-                    new LootSpawnEntry(CollectablesTypes.PistolAmmo, Vector3.back * 2)
+                    new LootSpawnEntry(new PistolAmmoConfig{Amount = 15}, Vector3.forward * 2),
+                    new LootSpawnEntry(new PistolAmmoConfig{Amount = 15}, Vector3.back * 2)
                 })
             };
         }

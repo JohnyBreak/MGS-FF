@@ -2,7 +2,7 @@ namespace Collectables
 {
     public interface ICollector
     {
-        bool TryCollect(ICollectableObject collectable);
+        bool TryCollect(CollectableConfig collectable);
         int GetCollectableType();
     }
 }

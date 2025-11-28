@@ -10,15 +10,9 @@ namespace LevelManagement
     {
         private Dictionary<Type, IOperationHandler> _handlersMap;
 
-        public LevelInitializationService(
-            AssetProvider assetProvider,
-            CollectableResolver resolver,
-            CollectableFloatingTextCanvas canvas)
+        public LevelInitializationService(CollectableService collectableService)
         {
-            var loot = new LootOperationHandler(
-                assetProvider,
-                resolver,
-                canvas);
+            var loot = new LootOperationHandler(collectableService);
             
             _handlersMap = new()
             {

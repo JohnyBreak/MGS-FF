@@ -1,3 +1,4 @@
+using Collectables;
 using UnityEngine;
 
 namespace LevelManagement
@@ -12,15 +13,15 @@ namespace LevelManagement
         }
     }
 
-    public readonly struct LootSpawnEntry
+    public class LootSpawnEntry
     {
-        public readonly int LootType;
+        public readonly CollectableConfig Config;
         public readonly Vector3 Position;
 
-        public LootSpawnEntry(int type, Vector3 position)
+        public LootSpawnEntry(CollectableConfig config, Vector3 position)
         {
             Position = position;
-            LootType = type;
+            Config = config;
         }
     }
 }

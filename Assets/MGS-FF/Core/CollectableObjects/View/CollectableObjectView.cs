@@ -1,8 +1,9 @@
-using Collectables.UI;
+using System;
 using DG.Tweening;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using Sequence = DG.Tweening.Sequence;
 
 namespace Collectables.View
 {
@@ -11,15 +12,18 @@ namespace Collectables.View
         [SerializeField] private Collider _collider;
         [SerializeField] private Collider _textCollider;
         [SerializeField] private LayerMask _mask;
-
-        private CollectableFloatingTextCanvas _canvas;
-        private ICollectableObject _collectable;
-        private CollectableResolver _resolver;
+        
+        private Action<CollectableObjectView> _onEnter;
+        private Action<CollectableObjectView> _onExit;
+        private Action<CollectableObjectView, Action, Action> _onCollect;
+        private CollectableConfig _config;
         private Vector3 _initialPosition;
         private Sequence _sequence;
         private CompositeDisposable _disposable = new CompositeDisposable();
         private int _hashCode = -1;
-
+        
+        public CollectableConfig Config => _config;
+        
         public int HashCode {
             get
             {
@@ -56,12 +60,7 @@ namespace Collectables.View
             {
                 return;
             }
-
-            if (_canvas == null)
-            {
-                return;
-            }
-            _canvas.Show(this);
+            _onEnter?.Invoke(this);
         }
         
         private void OnTextTriggerExit(Collider other)
@@ -70,39 +69,33 @@ namespace Collectables.View
             {
                 return;
             }
-
-            if (_canvas == null)
-            {
-                return;
-            }
-            _canvas.Hide(this);
+            _onExit?.Invoke(this);
         }
         
-        public void Init(
-            CollectableResolver resolver, 
-            ICollectableObject collectable,
-            CollectableFloatingTextCanvas canvas)
+        public void Init(CollectableConfig collectable,
+            Action<CollectableObjectView> onEnter,
+            Action<CollectableObjectView> onExit,
+            Action<CollectableObjectView, Action, Action> onCollect)
         {
-            _resolver = resolver;
-            _collectable = collectable;
-            _canvas = canvas;
+            _config = collectable;
+            _onEnter = onEnter;
+            _onExit = onExit;
+            _onCollect = onCollect;
         }
 
         public void Collect()
         {
-            if (_resolver.TryCollect(_collectable))
+            _onCollect?.Invoke(this, Success, Fail);
+            return;
+            
+            void Success()
             {
-                _canvas.Hide(this);
                 DOTween.Kill(this);
-                Destroy(gameObject);                
+                Destroy(gameObject);
             }
-            else
+            
+            void Fail()
             {
-                if (_canvas != null)
-                {
-                    _canvas.SetRedText(this);
-                }
-
                 _collider.enabled = false;
                 _sequence?.Kill();
                 _sequence = DOTween.Sequence();

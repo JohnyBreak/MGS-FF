@@ -20,13 +20,15 @@ public class CoreBootstrap : MonoBehaviour
         {
             new PistolAmmoCollector(_container)
         });
+
+        CollectableService collectableService = new CollectableService(
+            assetProvider,
+            resolver,
+            _canvas);
         
         ILevelLoader levelLoader = new LevelLoaderFacade(
             new LevelLoader(), 
-            new LevelInitializationService(
-                assetProvider, 
-                resolver, 
-                _canvas));
+            new LevelInitializationService(collectableService));
         
         ServiceLocator.Register(levelLoader);
         

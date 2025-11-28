@@ -1,10 +1,13 @@
-using Collectables.UI;
+using System;
 
 namespace Collectables.View
 {
     public interface ICollectableView
     {
-        void Init(CollectableResolver resolver, ICollectableObject collectable, CollectableFloatingTextCanvas canvas);
+        void Init(CollectableConfig collectable,
+            Action<CollectableObjectView> onEnter,
+            Action<CollectableObjectView> onExit,
+            Action<CollectableObjectView, Action, Action> onCollect);
         void Collect();
     }
 }

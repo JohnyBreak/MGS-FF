@@ -13,20 +13,20 @@ namespace Collectables
             _collectorsMap = collectors.ToDictionary(x => x.GetCollectableType());
         }
         
-        public bool TryCollect(ICollectableObject collectable)
+        public bool TryCollect(CollectableConfig collectableConfig)
         {
-            if (collectable == null)
+            if (collectableConfig == null)
             {
                 Debug.LogError($"Collectable is null");
                 return false;
             }
 
-            if (_collectorsMap.TryGetValue(collectable.GetCollectableType(), out var collector))
+            if (_collectorsMap.TryGetValue(collectableConfig.GetCollectableType(), out var collector))
             {
-                return collector.TryCollect(collectable);
+                return collector.TryCollect(collectableConfig);
             }
             
-            Debug.LogError($"No collector for '{collectable.GetCollectableType()}' CollectableType");
+            Debug.LogError($"No collector for '{collectableConfig.GetCollectableType()}' CollectableType");
             return false;
         }
     }
