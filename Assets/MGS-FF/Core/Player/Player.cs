@@ -66,6 +66,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (GameState.GameState.CurrentState != GameState.GameState.State.GamePlay)
+        {
+            return;
+        }
+
         var speedMultiplier = (Input.GetKey(KeyCode.LeftShift)) ? 0.5f : 1f;
         _infoContainer.MoveSpeed = _moveSpeed * speedMultiplier;
         
