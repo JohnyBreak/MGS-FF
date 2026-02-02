@@ -8,7 +8,6 @@ namespace DialogueSystem
     public class DialogueManager
     {
         private readonly DialogueView _view;
-        private GameObject _camera;
         private DialogueNodesContainer _currentNodesContainer;
         private int _currentStep;
         private Action _endCallback;
@@ -19,15 +18,15 @@ namespace DialogueSystem
         public DialogueManager(DialogueView view, GameObject camera)
         {
             _view = view;
-            _camera = camera;
             camera.SetActive(false);
             _view.SetActive(false);
 
             _executors = new()
             {
-                {typeof(ShowTextDialogueNode) ,new ShowTextNodeExecutor(_view)}
+                {typeof(ShowTextDialogueNode) ,new ShowTextNodeExecutor(_view)},
+                {typeof(SetDialogueCameraNode) ,new SetDialogueCameraNodeExecutor(camera.transform)},
+                {typeof(ToggleCameraNode) ,new ToggleCameraNodeExecutor(camera)},
             };
-
         }
 
         public void StartDialogue(DialogueNodesContainer nodesContainer, Action endCallback = null)//dialogue data: camera settings, characters positions, text sequences
@@ -43,7 +42,6 @@ namespace DialogueSystem
             _currentStep = -1;
             _view?.Prepare();
             _view?.SetActive(true);
-            _camera?.SetActive(true);
             
             GameState.GameState.SetState(GameState.GameState.State.Dialogue);
             
@@ -101,12 +99,16 @@ namespace DialogueSystem
             }
 
             var node = nodes.ElementAt(_currentStep);
-            var t = node.GetType();
+            //var t = node.GetType();
             if (!_executors.TryGetValue(node.GetType(), out var executor))
             {
                 return;
             }
             executor.Execute(node);
+            if (node is EditorDialogueNode)
+            {
+                NextStep();
+            }
             //_view.ShowPhrase(
             //    nodes.ElementAt(_currentStep),
             //    () => _view.ToggleIndicator(false),
@@ -116,7 +118,6 @@ namespace DialogueSystem
         private void EndDialogue()
         {
             _view?.SetActive(false);
-            _camera?.SetActive(false);
             
             _endCallback?.Invoke();
             _inProgress = false;

@@ -19,10 +19,12 @@ namespace DialogueSystem
         void Start()
         {
             _testNodesContainer = new DialogueNodesContainer();
-            
+            _testNodesContainer.Append(new SetDialogueCameraNode(new Vector3(0,3,-5), Quaternion.Euler(25,-25,0)));
+            _testNodesContainer.Append(new ToggleCameraNode(true));
             _testNodesContainer.Append(new ShowTextDialogueNode("Hi! i'm Cube"));
             _testNodesContainer.Append(new ShowTextDialogueNode("Wow!"));
             _testNodesContainer.Append(new ShowTextDialogueNode("Yeah"));
+            _testNodesContainer.Append(new ToggleCameraNode(false));
             
             _dialogueManager = new DialogueManager(_view, _dialogueCamera);
             _interactable.Init(_dialogueManager, _testNodesContainer);
