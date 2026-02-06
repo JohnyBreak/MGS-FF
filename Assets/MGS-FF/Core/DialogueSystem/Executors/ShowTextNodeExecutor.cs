@@ -1,6 +1,6 @@
 namespace DialogueSystem
 {
-    public class ShowTextNodeExecutor : INodeExecutor
+    public class ShowTextNodeExecutor : BaseExecutor<ShowTextDialogueNode>
     {
         private readonly DialogueView _view;
         public ShowTextNodeExecutor(DialogueView view)
@@ -8,10 +8,10 @@ namespace DialogueSystem
             _view = view;
         }
 
-        public void Execute(BaseDialogueNode node)
+        protected override void OnExecute(ShowTextDialogueNode node)
         {
             _view.ShowPhraseImmediate(
-                ((ShowTextDialogueNode)node).Text,
+                node.Text,
                 () => _view.ToggleIndicator(true));
         }
     }

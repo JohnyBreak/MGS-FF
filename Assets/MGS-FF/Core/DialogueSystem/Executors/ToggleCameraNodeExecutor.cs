@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace DialogueSystem
 {
-    public class ToggleCameraNodeExecutor : INodeExecutor
+    public class ToggleCameraNodeExecutor : BaseExecutor<ToggleCameraNode>
     {
         private readonly GameObject _camera;
 
@@ -11,15 +11,9 @@ namespace DialogueSystem
             _camera = camera;
         }
         
-        public void Execute(BaseDialogueNode node)
+        protected override void OnExecute(ToggleCameraNode node)
         {
-            
-            if (node is not ToggleCameraNode targetNode)
-            {
-                return;
-            }
-            
-            _camera.SetActive(targetNode.Toggle);
+            _camera.SetActive(node.Toggle);
         }
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace DialogueSystem
 {
-    public class SetDialogueCameraNodeExecutor : INodeExecutor
+    public class SetDialogueCameraNodeExecutor : BaseExecutor<SetDialogueCameraNode>
     {
         private readonly Transform _camera;
 
@@ -11,14 +11,9 @@ namespace DialogueSystem
             _camera = camera;
         }
 
-        public void Execute(BaseDialogueNode node)
+        protected override void OnExecute(SetDialogueCameraNode node)
         {
-            if (node is not SetDialogueCameraNode targetNode)
-            {
-                return;
-            }
-
-            _camera.SetPositionAndRotation(targetNode.Position, targetNode.Rotation);
+            _camera.SetPositionAndRotation(node.Position, node.Rotation);
         }
     }
 }

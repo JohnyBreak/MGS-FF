@@ -15,7 +15,7 @@ namespace DialogueSystem
         private Dictionary<Type, INodeExecutor> _executors;
         public bool InProgress => _inProgress;
         
-        public DialogueManager(DialogueView view, GameObject camera)
+        public DialogueManager(DialogueView view, GameObject camera, GameObject player)
         {
             _view = view;
             camera.SetActive(false);
@@ -26,6 +26,7 @@ namespace DialogueSystem
                 {typeof(ShowTextDialogueNode) ,new ShowTextNodeExecutor(_view)},
                 {typeof(SetDialogueCameraNode) ,new SetDialogueCameraNodeExecutor(camera.transform)},
                 {typeof(ToggleCameraNode) ,new ToggleCameraNodeExecutor(camera)},
+                {typeof(SetPlayerNode) ,new SetPlayerNodeExecutor(player.transform)},
             };
         }
 
