@@ -9,6 +9,7 @@ namespace DialogueSystem
     {
         private readonly DialogueView _view;
         private DialogueNodesContainer _currentNodesContainer;
+        private DialogueBuilder _dialogueBuilder;
         private int _currentStep;
         private Action _endCallback;
         private bool _inProgress;
@@ -20,7 +21,8 @@ namespace DialogueSystem
             _view = view;
             camera.SetActive(false);
             _view.SetActive(false);
-
+            _dialogueBuilder = new DialogueBuilder();
+            
             _executors = new()
             {
                 {typeof(ShowTextDialogueNode) ,new ShowTextNodeExecutor(_view)},
@@ -30,8 +32,18 @@ namespace DialogueSystem
             };
         }
 
+        public void StartDialogue(string dialogueID, Action endCallback = null)
+        {
+            StartDialogue(_dialogueBuilder.GetDialogueByID(dialogueID), endCallback);
+        }
+
         public void StartDialogue(DialogueNodesContainer nodesContainer, Action endCallback = null)//dialogue data: camera settings, characters positions, text sequences
         {
+            if (nodesContainer.IsEmpty)
+            {
+                return;
+            }
+
             if (_inProgress)
             {
                 return;

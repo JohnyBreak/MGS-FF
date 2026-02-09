@@ -5,18 +5,18 @@ namespace DialogueSystem
 {
     public class DialogueInteractable : MonoBehaviour, IInteractable
     {
-        private DialogueManager _dialogueManager;
-        private DialogueNodesContainer _nodesContainer;
+        [SerializeField] private string _dialogueID;
         
-        public void Init(DialogueManager dialogueManager, DialogueNodesContainer nodesContainer)
+        private DialogueManager _dialogueManager;
+        
+        public void Init(DialogueManager dialogueManager)
         {
             _dialogueManager = dialogueManager;
-            _nodesContainer = nodesContainer;
         }
 
         public void Interact()
         {
-            _dialogueManager.StartDialogue(_nodesContainer, () => { GameState.GameState.SetState(GameState.GameState.State.GamePlay);});
+            _dialogueManager.StartDialogue(_dialogueID, () => { GameState.GameState.SetState(GameState.GameState.State.GamePlay);});
         }
     }
 }
