@@ -867,6 +867,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogueCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5003545881716331516, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
+      propertyPath: _delay
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 7373691218458920465, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_fontSize
       value: 70
@@ -1675,7 +1679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 944222413820087703, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.00000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 944222413820087703, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1699,7 +1703,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1634927252005340173, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.00000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 1634927252005340173, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1735,7 +1739,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5130644679597177916, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.00000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 5130644679597177916, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1755,19 +1759,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6981396378531576830, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 2.696486
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6981396378531576830, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6.880977
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 7366653237063202178, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 2.696486
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7366653237063202178, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6.880977
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 7611948031094654266, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1811,11 +1815,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8638729741922831988, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 2.696486
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8638729741922831988, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6.880977
+      value: -7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

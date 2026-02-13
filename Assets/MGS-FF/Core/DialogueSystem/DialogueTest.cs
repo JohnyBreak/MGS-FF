@@ -31,7 +31,8 @@ namespace DialogueSystem
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _dialogueManager.SkipOrNext();
+                _view.MoveNext();
+                //_dialogueManager.MoveNext();
             }
         }
 

@@ -11,9 +11,10 @@ namespace DialogueSystem
             _camera = camera;
         }
         
-        protected override void OnExecute(ToggleCameraNode node)
+        protected override void OnExecute(ToggleCameraNode node, INodeExecutionContext context)
         {
             _camera.SetActive(node.Toggle);
+            context?.MoveNext();
         }
     }
 }
