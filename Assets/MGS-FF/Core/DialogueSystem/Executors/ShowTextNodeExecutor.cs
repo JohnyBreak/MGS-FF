@@ -8,11 +8,9 @@ namespace DialogueSystem
             _view = view;
         }
 
-        protected override void OnExecute(ShowTextDialogueNode node)
+        protected override void OnExecute(ShowTextDialogueNode node, INodeExecutionContext context)
         {
-            _view.ShowPhraseImmediate(
-                node.Text,
-                () => _view.ToggleIndicator(true));
+            _view.ShowPhrase(node.Text);
         }
     }
 }

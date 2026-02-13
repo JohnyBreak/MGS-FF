@@ -196,6 +196,7 @@ MonoBehaviour:
   _canvas: {fileID: 6836749490788687163}
   _text: {fileID: 7373691218458920465}
   _indicator: {fileID: 6394464996307151954}
+  _delay: 0.05
 --- !u!1 &4193587504102554618
 GameObject:
   m_ObjectHideFlags: 0

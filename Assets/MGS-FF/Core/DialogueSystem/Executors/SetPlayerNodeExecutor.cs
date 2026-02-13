@@ -11,9 +11,10 @@ namespace DialogueSystem
             _player = player;
         }
 
-        protected override void OnExecute(SetPlayerNode node)
+        protected override void OnExecute(SetPlayerNode node, INodeExecutionContext context)
         {
             _player.SetPositionAndRotation(node.Position, node.Rotation);
+            context?.MoveNext();
         }
     }
 }

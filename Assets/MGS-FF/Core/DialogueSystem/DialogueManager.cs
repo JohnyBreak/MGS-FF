@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace DialogueSystem
 {
-    public class DialogueManager
+    public class DialogueManager : INodeExecutionContext
     {
         private readonly DialogueView _view;
         private DialogueNodesContainer _currentNodesContainer;
@@ -19,8 +19,10 @@ namespace DialogueSystem
         public DialogueManager(DialogueView view, GameObject camera, GameObject player)
         {
             _view = view;
-            camera.SetActive(false);
+            _view.Init(this);
             _view.SetActive(false);
+            
+            camera.SetActive(false);
             _dialogueBuilder = new DialogueBuilder();
             
             _executors = new()
@@ -61,36 +63,14 @@ namespace DialogueSystem
             NextStep();
         }
 
-        public void SkipOrNext()
+        public void MoveNext()
         {
             if (_inProgress == false)
             {
                 return;
             }
-
-            if (_view.InProgress)
-            {
-                SkipAnim();
-            }
-            else
-            {
-                NextStep();
-            }
-        }
-
-        private void SkipAnim()
-        {
-            var texts = _currentNodesContainer.Nodes;
             
-            if (_currentStep >= texts.Count)
-            {
-                EndDialogue();
-                return;
-            }
-            
-            //_view.ShowPhraseImmediate(
-            //   texts.ElementAt(_currentStep),
-            //   () => _view.ToggleIndicator(true));
+            NextStep();
         }
 
         private void NextStep()
@@ -112,20 +92,12 @@ namespace DialogueSystem
             }
 
             var node = nodes.ElementAt(_currentStep);
-            //var t = node.GetType();
+            
             if (!_executors.TryGetValue(node.GetType(), out var executor))
             {
                 return;
             }
-            executor.Execute(node);
-            if (node is EditorDialogueNode)
-            {
-                NextStep();
-            }
-            //_view.ShowPhrase(
-            //    nodes.ElementAt(_currentStep),
-            //    () => _view.ToggleIndicator(false),
-            //    () => _view.ToggleIndicator(true));
+            executor.Execute(node, this);
         }
 
         private void EndDialogue()
