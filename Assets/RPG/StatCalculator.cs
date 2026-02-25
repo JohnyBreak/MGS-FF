@@ -18,7 +18,7 @@ namespace RPG
                 return baseValue + addValue;
             }
 
-            return 0;
+            return baseValue;
         }
     }
 }

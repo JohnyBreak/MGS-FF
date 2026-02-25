@@ -21,7 +21,10 @@ namespace RPG
         
         private void Start()
         {
-            _statsModel.RegisterStat(StatsTypes.Strength, 10);
+            _statsModel.RegisterStat(StatsTypes.Strength, 20);
+            _statsModel.RegisterStat(StatsTypes.Magic, 10);
+            _statsModel.RegisterStat(StatsTypes.Dexterity, 15);
+            _statsModel.RegisterStat(StatsTypes.Vitality, 7);
             
             _upgradeService = new UpgradeService(_xpModel, _lvlModel, _statsModel);
             _upgradeService.Initialize();

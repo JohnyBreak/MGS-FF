@@ -29,9 +29,8 @@ namespace RPG
             Model.LvlModel.CurrentUpgradePoints.Subscribe(OnUPChanged).AddTo(_cd);
             
             Model.StatsModel.Stats.ObserveReplace()
-                .Where(x => x.Key == StatsTypes.Strength)
                 .Select(x => (x.Key, x.NewValue))
-                .Subscribe(OnCurrentStatChanged).AddTo(_cd);
+                .Subscribe(OnStatChanged).AddTo(_cd);
 
             View.UpgradeButton += OnUpgradeClick;
             _upgradeService.CanUpgrade.Subscribe(OnCanUpgrade).AddTo(_cd);
@@ -45,7 +44,11 @@ namespace RPG
             OnNextLvlXPChanged(Model.XpModel.NextLvlXp.Value);
             OnLVLChanged(Model.LvlModel.CurrentLVL.Value);
             OnUPChanged(Model.LvlModel.CurrentUpgradePoints.Value);
-            OnCurrentStatChanged((StatsTypes.Strength, Model.StatsModel.GetValue(StatsTypes.Strength)));
+            
+            foreach (var pair in Model.StatsModel.Stats)
+            {
+                OnStatChanged((pair.Key, Model.StatsModel.GetValue(pair.Key)));
+            }
         }
 
         protected override void OnDispose()
@@ -85,10 +88,10 @@ namespace RPG
             View.SetUpgradePointsText(newValue.ToString());
         }
         
-        private void OnCurrentStatChanged((StatsTypes type, int newValue) pair)
+        private void OnStatChanged((StatsTypes type, int newValue) pair)
         {
-            View.SetStartSkillText(pair.newValue.ToString());
-            View.SetCurrentSkillText(_calculator.Calculate(pair.type, pair.newValue).ToString());
+            View.SetBaseStatText(pair.type, pair.newValue.ToString());
+            View.SetCurrentStatText(pair.type, _calculator.Calculate(pair.type, pair.newValue).ToString());
         }
     }
 }
