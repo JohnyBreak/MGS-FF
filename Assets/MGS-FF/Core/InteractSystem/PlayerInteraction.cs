@@ -16,11 +16,16 @@ namespace InteractSystem
 
         private void OnTarget(IInteractable interactable)
         {
-            Debug.Log(interactable != null ? $"can interact" : $"no interact target");
+            //Debug.Log(interactable != null ? $"can interact" : $"no interact target");
         }
 
         private void Update()
         {
+            if (GameState.GameState.CurrentState != GameState.GameState.State.GamePlay)
+            {
+                return;
+            }
+            
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (_container.Target.HasValue == false)

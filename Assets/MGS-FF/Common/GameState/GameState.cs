@@ -2,20 +2,21 @@ using System;
 
 namespace GameState
 {
-    public class GameState
+    public static class GameState
     {
         public enum State 
         {
             None = 0,
             Paused = 1,
-            GamePlay = 2
+            GamePlay = 2,
+            Dialogue = 3
         }
     
-        public State CurrentState { get; private set; }
-        public event Action<State> GameStateChangedEvent;
+        public static State CurrentState { get; private set; }
+        public static event Action<State> GameStateChangedEvent;
 
 
-        public void SetState(State newState) 
+        public static void SetState(State newState) 
         {
             if (newState == CurrentState) return;
 
