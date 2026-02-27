@@ -14,7 +14,7 @@ namespace DialogueSystem
         protected override void OnExecute(SetDialogueCameraNode node, INodeExecutionContext context)
         {
             _camera.SetPositionAndRotation(node.Position, node.Rotation);
-            context?.MoveNext();
+            context?.NextStep();
         }
     }
 }

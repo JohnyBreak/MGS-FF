@@ -239,6 +239,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueTest
   _view: {fileID: 356897751}
+  _interactable: {fileID: 0}
+  _dialogueCamera: {fileID: 0}
+  _player: {fileID: 0}
 --- !u!4 &722752153
 Transform:
   m_ObjectHideFlags: 0
@@ -980,6 +983,10 @@ PrefabInstance:
     - target: {fileID: 2776088705180887111, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_Name
       value: DialogueCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5819273263180093973, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

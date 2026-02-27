@@ -1,20 +1,19 @@
 using System;
 using System.Collections;
 using TMPro;
+using UI.MVP;
 using UnityEngine;
 
 namespace DialogueSystem
 {
-    public class DialogueView : MonoBehaviour
+    public class DialogueView : ViewBase
     {
-        [SerializeField] private Canvas _canvas;
         [SerializeField] private TMP_Text _text;
         [SerializeField] private GameObject _indicator;
         [SerializeField] private float _delay = 0.3f;
         
         private WaitForSeconds _delayWait; 
         private Coroutine _coroutine;
-        private INodeExecutionContext _context;
         private Action _endCallback;
         public bool InProgress { get; private set; }
 
@@ -23,18 +22,13 @@ namespace DialogueSystem
             _delayWait = new WaitForSeconds(_delay);
         }
 
-        public void Init(INodeExecutionContext context)
+        private void Prepare()
         {
-            _context = context;
-        }
+            if (Canvas.enabled == false)
+            {
+                SetActive(true);
+            }
 
-        public void SetActive(bool active)
-        {
-            _canvas.enabled = active;
-        }
-
-        public void Prepare()
-        {
             StopRoutine();
             _text.text = String.Empty;
             _endCallback = null;
@@ -47,19 +41,9 @@ namespace DialogueSystem
             _indicator.SetActive(active);
         }
 
-        public void MoveNext()
-        {
-            if (InProgress)
-            {
-                Skip();
-                return;
-            }
-            _context?.MoveNext();
-        }
-        
         public void ShowPhrase(string text, Action prepCallback = null, Action endCallback = null)
         {
-            StopRoutine();
+            Prepare();
             _coroutine = StartCoroutine(ShowRoutine(text, prepCallback, endCallback));
         }
         

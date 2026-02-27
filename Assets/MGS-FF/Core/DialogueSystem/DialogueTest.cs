@@ -9,8 +9,9 @@ namespace DialogueSystem
         [SerializeField] private GameObject _dialogueCamera;
         [SerializeField] private GameObject _player;
         
-        private DialogueManager _dialogueManager;
-
+        private DialogueNodeExecutionContext _dialogueNodeExecutionContext;
+        private DialogueController _controller;
+        
         private void Awake()
         {
             GameState.GameState.SetState(GameState.GameState.State.GamePlay);
@@ -18,27 +19,46 @@ namespace DialogueSystem
 
         void Start()
         {
-            _dialogueManager = new DialogueManager(_view, _dialogueCamera, _player);
-            _interactable.Init(_dialogueManager);
+            var presenter = new DialoguePresenter(new DialogueModel(), _view);
+            
+            _dialogueNodeExecutionContext = new DialogueNodeExecutionContext();
+            
+            _controller = new DialogueController(_dialogueNodeExecutionContext, presenter);
+            
+            _dialogueCamera.SetActive(false);
+            
+            _dialogueNodeExecutionContext.RegisterExecutors(new()
+            {
+                {typeof(ShowTextDialogueNode) ,new ShowTextNodeExecutor(_controller)},
+                {typeof(SetDialogueCameraNode) ,new SetDialogueCameraNodeExecutor(_dialogueCamera.transform)},
+                {typeof(ToggleCameraNode) ,new ToggleCameraNodeExecutor(_dialogueCamera)},
+                {typeof(SetPlayerNode) ,new SetPlayerNodeExecutor(_player.transform)},
+            });
+            
+            _interactable.Init(_controller);
         }
 
         void Update()
         {
-            if (_dialogueManager.InProgress == false)
+            if (_controller.InProgress == false)
             {
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _view.MoveNext();
-                //_dialogueManager.MoveNext();
+                _controller.NextClick();
             }
         }
 
         private void Callback()
         {
             Debug.LogError("dialogue end");
+        }
+
+        private void OnDestroy()
+        {
+            _controller.Dispose();
         }
     }
 }
