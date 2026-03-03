@@ -7,16 +7,16 @@ namespace DialogueSystem
     {
         [SerializeField] private string _dialogueID;
         
-        private DialogueManager _dialogueManager;
+        private DialogueController _dialogueController;
         
-        public void Init(DialogueManager dialogueManager)
+        public void Init(DialogueController dialogueController)
         {
-            _dialogueManager = dialogueManager;
+            _dialogueController = dialogueController;
         }
 
         public void Interact()
         {
-            _dialogueManager.StartDialogue(_dialogueID, () => { GameState.GameState.SetState(GameState.GameState.State.GamePlay);});
+            _dialogueController.StartDialogue(_dialogueID, () => { GameState.GameState.SetState(GameState.GameState.State.GamePlay);});
         }
     }
 }

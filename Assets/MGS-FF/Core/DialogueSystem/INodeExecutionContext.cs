@@ -1,7 +1,11 @@
+using System;
+
 namespace DialogueSystem
 {
     public interface INodeExecutionContext
     {
-        public void MoveNext();
+        public void Initialize(DialogueNodesContainer nodesContainer);
+        public void NextStep();
+        public event Action EndEvent;
     }
 }

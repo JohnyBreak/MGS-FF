@@ -14,7 +14,7 @@ namespace DialogueSystem
         protected override void OnExecute(SetPlayerNode node, INodeExecutionContext context)
         {
             _player.SetPositionAndRotation(node.Position, node.Rotation);
-            context?.MoveNext();
+            context?.NextStep();
         }
     }
 }

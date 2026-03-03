@@ -2,15 +2,15 @@ namespace DialogueSystem
 {
     public class ShowTextNodeExecutor : BaseExecutor<ShowTextDialogueNode>
     {
-        private readonly DialogueView _view;
-        public ShowTextNodeExecutor(DialogueView view)
+        private readonly DialogueController _dialogueController;
+        public ShowTextNodeExecutor(DialogueController dialogueController)
         {
-            _view = view;
+            _dialogueController = dialogueController;
         }
 
         protected override void OnExecute(ShowTextDialogueNode node, INodeExecutionContext context)
         {
-            _view.ShowPhrase(node.Text);
+            _dialogueController.ShowPhrase(node.Text);
         }
     }
 }
