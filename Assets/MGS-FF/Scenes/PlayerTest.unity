@@ -889,6 +889,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 773085356741625760, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1814830284669699654, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -977,21 +981,29 @@ PrefabInstance:
       propertyPath: _delay
       value: 0.05
       objectReference: {fileID: 0}
+    - target: {fileID: 6394464996307151954, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6828269170708521647, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7373691218458920465, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_fontSize
       value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 7373691218458920465, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_fontColor.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7373691218458920465, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_fontColor.g
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7373691218458920465, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_fontColor.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7373691218458920465, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_fontSizeMax
@@ -999,7 +1011,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7373691218458920465, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4294967295
+      value: 4278190080
+      objectReference: {fileID: 0}
+    - target: {fileID: 8694343671509623258, guid: e21afe1207ac21c46b779974ece2a30c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1209,7 +1225,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1040561779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2630,19 +2646,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6981396378531576830, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.00001215947
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6981396378531576830, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -1.300036
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 7366653237063202178, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.00001215947
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7366653237063202178, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -1.300036
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 7611948031094654266, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2686,11 +2702,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8638729741922831988, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.y
-      value: 0.00001215947
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8638729741922831988, guid: af4aa61b96825e74e8a045935eba2c3d, type: 3}
       propertyPath: m_FollowOffset.z
-      value: -1.300036
+      value: -7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
